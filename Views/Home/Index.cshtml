@@ -1,0 +1,25 @@
+﻿<!-- Views/Home/Index.cshtml -->
+@model avatCo.Models.ViewModels.HomePageViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+<section class="hero">
+    <h1>@Model.HeroTitle</h1>
+    <p>@Model.HeroSubtitle</p>
+    <a href="/products" class="btn-primary">Explore Products</a>
+</section>
+
+<section class="featured-products">
+    <h2>Featured Products</h2>
+    <div class="product-grid">
+        @foreach (var product in Model.FeaturedProducts)
+        {
+            <div class="product-card">
+                <img src="@product.ImageUrl" alt="@product.Title" />
+                <h3>@product.Title</h3>
+                <p>@product.Description</p>
+                <span class="price">@product.Price.ToString("C")</span>
+            </div>
+        }
+    </div>
+</section>
