@@ -1,4 +1,4 @@
-html {
+﻿html {
   font-size: 14px;
 }
 
@@ -20,6 +20,36 @@ html {
 body {
   margin-bottom: 60px;
 }
+/* Custom header styles */
+.navbar-custom {
+    background-color: #1F2937; /* Dark gray */
+}
+
+    .navbar-custom .nav-link,
+    .navbar-custom .site-name {
+        color: #fff !important;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+
+        .navbar-custom .nav-link:hover,
+        .navbar-custom .site-name:hover {
+            color: #f87171 !important; /* Pink hover */
+        }
+
+.logo {
+    height: 40px;
+}
+
+.nav-icon {
+    color: #fff;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+    .nav-icon:hover {
+        color: #f87171; /* Pink hover */
+    }
 
 .hero-section {
     height: 500px;
@@ -99,22 +129,76 @@ body {
     margin-bottom: 28px;
 }
 
-.promo-card {
-    background: #fff;
-    border-radius: 12px;
-    padding: 18px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-    text-align: center;
+.promos-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
 }
 
-    .promo-card img {
-        width: 100%;
-        height: 140px; /* fixed visual height */
-        object-fit: contain; /* keeps the image inside and centered */
-        border-radius: 8px;
-        display: block;
-        margin: 0 auto 12px;
+@media (min-width: 768px) {
+    .promos-container {
+        grid-template-columns: repeat(2, 1fr);
     }
+}
+
+.promo-card {
+    background: white; /* gray background like screenshot */
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 180px; /* consistent height */
+    transition: transform .22s ease, box-shadow .22s ease;
+}
+
+    .promo-card:hover {
+        transform: translateY(-6px) scale(1.01);
+        box-shadow: 0 14px 36px rgba(0,0,0,0.12);
+    }
+
+    /* white "pane" behind PNGs so checkerboard isn't visible */
+    .promo-card .img-wrap {
+        background: #fff;
+        padding: 8px;
+        border-radius: 8px;
+        display: inline-block;
+    }
+
+    .promo-card img {
+        display: block;
+        max-height: 110px; /* image visual size */
+        width: auto;
+        object-fit: contain;
+    }
+
+/* caption */
+.promo-caption {
+    margin-top: 12px;
+    text-align: center;
+    color: #333;
+    font-weight: 600;
+    line-height: 1.1;
+    font-size: 0.98rem;
+}
+
+/* smaller screens */
+@media (max-width: 520px) {
+    .promo-card {
+        height: 150px;
+        padding: 14px;
+    }
+
+        .promo-card img {
+            max-height: 84px;
+        }
+}
+
 
 .promo-caption {
     color: #333;
@@ -188,3 +272,28 @@ body {
         padding: 20px 12px;
     }
 }
+
+
+
+.footer {
+    background-color: #1F2937; /* same dark blue as header */
+}
+
+.footer-link {
+    color: #d1d5db; /* light gray */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+    .footer-link:hover {
+        color: #f87171; /* pink hover */
+    }
+
+.footer h5, .footer h6 {
+    color: #fff;
+}
+
+.footer p {
+    color: #d1d5db;
+}
+
