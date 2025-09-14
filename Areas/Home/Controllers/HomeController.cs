@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
-namespace avatCo.Controllers
+namespace avatCo.Areas.Home.Controllers
 {
+    [Area("Home")]
     public class HomeController : Controller
     {
         private readonly AvatDbContext _context;
@@ -15,29 +16,27 @@ namespace avatCo.Controllers
             _context = context;
         }
 
-
+        [HttpGet("")]
         public IActionResult Index()
         {
             var model = new HomePageViewModel
             {
                 HeroTitle = "Welcome to Avat Co",
                 HeroSubtitle = "Scalable solutions for modern businesses",
-                FeaturedProducts = _context.Products
-                                            .Where(p => p.IsActive)
-                                            .Take(4)
-                                            .ToList()
+                FeaturedProducts = _context.Products.ToList()
             };
 
-            return View(model); // ✅ Pass the model to the view
+            return View(model);
         }
 
-
+        [HttpGet]
         public IActionResult Privacy()
         {
             return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        [HttpGet("Error")]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

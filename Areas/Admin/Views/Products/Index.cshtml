@@ -1,0 +1,30 @@
+﻿@model List<avatCo.Models.Product>
+@{
+    ViewData["Title"] = "product";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<a href="/admin/products/create">Add New Product</a>
+
+<table>
+    <thead>
+        <tr><th>Title</th><th>Price</th><th>description</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.Title</td>
+                <td>@p.Price</td>
+                <td>@p.Description</td>
+                <td>
+                    <a href="/admin/products/edit/@p.Id">Edit</a>
+                    <form method="post" action="/admin/products/delete/@p.Id" style="display:inline;">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

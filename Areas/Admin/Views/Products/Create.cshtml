@@ -1,0 +1,16 @@
+﻿@model List<avatCo.Models.Product>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form asp-area="Admin" asp-controller="Products" asp-action="Create" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+
+    <input type="file" name="ImageFile" class="form-control" />
+    <input type="text" name="Title" class="form-control" placeholder="Title" />
+    <input type="number" name="Price" class="form-control" placeholder="Price" />
+    <textarea name="Description" class="form-control" placeholder="Description"></textarea>
+    <button type="submit" class="btn btn-success">Add Product</button>
+</form>
+
+<script src="/_framework/aspnetcore-browser-refresh.js"></script>
