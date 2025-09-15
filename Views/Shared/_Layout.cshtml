@@ -61,20 +61,18 @@
         </div>
     </div>
 
-    <footer class="footer text-white">
+    <footer class="site-footer text-white" dir="rtl">
         <div class="container py-5">
             <div class="row">
 
                 <!-- Column 1: About -->
-                <div class="col-md-3 mb-4">
+                <div class="col-12 col-md-3 mb-4">
                     <h5 class="fw-bold">Avat Co</h5>
-                    <p class="small">
-                        بزرگ‌ترین فروشگاه آنلاین محصولات بدنسازی و فیتنس در خاورمیانه
-                    </p>
+                    <p class="small">بزرگ‌ترین فروشگاه آنلاین محصولات آزمایشگاهی غرب کشور</p>
                 </div>
 
                 <!-- Column 2: Quick Links -->
-                <div class="col-md-3 mb-4">
+                <div class="col-12 col-md-3 mb-4">
                     <h6 class="fw-bold">لینک های سریع</h6>
                     <ul class="list-unstyled small">
                         <li><a href="#" class="footer-link">خانه</a></li>
@@ -85,7 +83,7 @@
                 </div>
 
                 <!-- Column 3: Support -->
-                <div class="col-md-3 mb-4">
+                <div class="col-12 col-md-3 mb-4">
                     <h6 class="fw-bold">پشتیبانی</h6>
                     <ul class="list-unstyled small">
                         <li><a href="#" class="footer-link">سوالات متداول</a></li>
@@ -96,7 +94,7 @@
                 </div>
 
                 <!-- Column 4: Contact -->
-                <div class="col-md-3 mb-4">
+                <div class="col-12 col-md-3 mb-4">
                     <h6 class="fw-bold">ارتباط با ما</h6>
                     <ul class="list-unstyled small">
                         <li><i class="bi bi-telephone me-2"></i> شماره تماس</li>
@@ -104,19 +102,17 @@
                         <li><i class="bi bi-geo-alt me-2"></i> آدرس</li>
                     </ul>
                 </div>
+
             </div>
 
             <hr class="border-light">
 
-            <!-- Bottom Bar -->
-            <div class="text-center small">
-                © 2025 Avat Co - تمامی حقوق محفوظ است
-            </div>
+            <div class="text-center small">© 2025 Avat Co - تمامی حقوق محفوظ است</div>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+@*     <script src="~/lib/jquery/dist/jquery.min.js"></script> *@
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
