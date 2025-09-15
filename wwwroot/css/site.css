@@ -1,5 +1,15 @@
-﻿html {
-  font-size: 14px;
+﻿html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content-wrapper {
+    flex: 1; /* pushes footer down */
 }
 
 @media (min-width: 768px) {
@@ -12,14 +22,7 @@
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
-}
 
-body {
-  margin-bottom: 60px;
-}
 /* Custom header styles */
 .navbar-custom {
     background-color: #1F2937; /* Dark gray */
@@ -274,19 +277,61 @@ body {
 }
 
 
+.navbar-custom {
+    background-color: #1F2937; /* dark blue */
+}
+
+.navbar-brand .site-name {
+    color: #ffffff;
+    font-size: 1.2rem;
+}
+
+.nav-link {
+    color: #d1d5db !important;
+    transition: color 0.3s ease;
+}
+
+    .nav-link:hover {
+        color: #f87171 !important; /* pink hover */
+    }
+
+.nav-icon {
+    color: #d1d5db;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+    .nav-icon:hover {
+        color: #f87171;
+    }
+
 
 .footer {
     background-color: #1F2937; /* same dark blue as header */
+    direction: rtl;
+    text-align: right;
+    padding-top: 40px;
+    padding-bottom: 20px;
 }
 
+    .footer ul {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    .footer li {
+        margin-bottom: 6px;
+    }
+
 .footer-link {
-    color: #d1d5db; /* light gray */
+    color: #d1d5db;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
     .footer-link:hover {
-        color: #f87171; /* pink hover */
+        color: #f87171;
     }
 
 .footer h5, .footer h6 {
@@ -296,4 +341,3 @@ body {
 .footer p {
     color: #d1d5db;
 }
-
