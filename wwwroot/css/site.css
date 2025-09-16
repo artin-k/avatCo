@@ -15,11 +15,12 @@ body {
 /* main content wrapper must grow */
 .content-wrapper {
     flex: 1 1 auto;
+    padding-bottom: 120px;
 }
 
     /* ensure main has space inside wrapper */
     .content-wrapper main[role="main"] {
-        min-height: 1px;
+        min-height: 20px;
     }
 
 /* footer appearance */
@@ -27,8 +28,8 @@ body {
     background-color: #1F2937; /* dark background */
     direction: rtl;
     text-align: right;
-    padding-top: 40px;
-    padding-bottom: 20px;
+    padding-top: 15px;
+    padding-bottom: 180px;
     color: #fff;
 }
 
@@ -72,12 +73,42 @@ body {
     color: #fff;
 }
 
+
+.footer {
+    position: fixed;
+    background-color: #1F2937; /* same dark blue as header */
+    direction: rtl;
+    text-align: right;
+    z-index: 999;
+}
+
+    .footer ul {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    .footer li {
+        margin-bottom: 6px;
+    }
+
+.footer-link {
+    color: #d1d5db;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+    .footer-link:hover {
+        color: #f87171;
+    }
+
+.footer h5, .footer h6 {
+    color: #fff;
+}
+
 .footer p {
     color: #d1d5db;
 }
-
-
-
 
 
 
@@ -89,13 +120,37 @@ body {
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #fff;
+}
+
+.carousel-caption h1,
+.carousel-caption p,
+.carousel-caption a {
+    background: none; /* darker but smaller box */
+    display: inline-block; /* shrink-wrap to content */
+    padding: 15px 25px;
+    border-radius: 12px;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+    z-index: 2;
+}
+
+.lead {
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.carousel-item img {
+    height: 80vh; /* make it similar to your Tailwind 80vh */
+    object-fit: cover; /* cover full width */
 }
 
 
 /* Custom header styles */
 .navbar-custom {
     background-color: #1F2937; /* Dark gray */
+}
+
+.navbar-dark .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
 
     .navbar-custom .nav-link,
@@ -109,10 +164,6 @@ body {
         .navbar-custom .site-name:hover {
             color: #f87171 !important; /* Pink hover */
         }
-
-.logo {
-    height: 40px;
-}
 
 .nav-icon {
     color: #fff;
@@ -167,11 +218,13 @@ body {
 }
 
 .logo {
+    height: 40px;
     display: none;
     height: 40px;
 }
 
 .site-name {
+    display: none;
     display: block;
     font-size: 1.25rem;
     font-weight: normal;
@@ -182,9 +235,6 @@ body {
         display: block;
     }
 
-    .site-name {
-        display: none;
-    }
 }
 
 /* container */
@@ -376,36 +426,4 @@ body {
     }
 
 
-.footer {
-    background-color: #1F2937; /* same dark blue as header */
-    direction: rtl;
-    text-align: right;
-}
 
-    .footer ul {
-        padding: 0;
-        margin: 0;
-        list-style: none;
-    }
-
-    .footer li {
-        margin-bottom: 6px;
-    }
-
-.footer-link {
-    color: #d1d5db;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-    .footer-link:hover {
-        color: #f87171;
-    }
-
-.footer h5, .footer h6 {
-    color: #fff;
-}
-
-.footer p {
-    color: #d1d5db;
-}

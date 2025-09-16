@@ -1,5 +1,6 @@
 ﻿using avatCo.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace avatCo.Areas.Admin.Controllers
 {
@@ -17,8 +18,11 @@ namespace avatCo.Areas.Admin.Controllers
         [HttpGet("")]
         public IActionResult Index()
         {
-            var products = _context.Products.ToList();
-            return View(products);
+            var categories = _context.Categories.ToList();
+            var products = _context.Products.Include(p => p.Category).ToList();
+
+            ViewBag.Categories = categories;
+            return View(products); // assuming your model is still List<Product>
         }
 
         [HttpGet]

@@ -4,17 +4,54 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!-- Hero Section -->
-<section class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-20 px-6 text-center">
-    <div class="hero-section position-relative text-center text-white">
-        <img src="~/uploads/Home/design website mirzie.png" class="img-fluid w-100" alt="Hero Background" />
-        <div class="hero-content position-absolute top-50 start-50 translate-middle">
-            <h1 class="fw-bold">به فروشگاه اوات کو خوش آمدید</h1>
-            <p class="lead">بزرگ ترین فروشگاه آنلاین محصولات گوسفندی غرب کشور</p>
-            <a href="/Products" class="btn btn-light btn-lg">دیدن محصولات</a>
+<section id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="3000" data-bs-wrap="true">
+    <div class="carousel-inner">
+
+        <!-- Slide 1 -->
+        <div class="carousel-item active">
+            <img src="/uploads/Home/Hero1.png" class="d-block w-100" alt="Hero 1">
+            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center h-100">
+                <h1 class="fw-bold display-5">به فروشگاه اوات کو خوش آمدید</h1>
+                <p class="lead">بزرگ‌ترین فروشگاه آنلاین محصولات گوسفندی غرب کشور</p>
+                <a href="/Products" class="btn btn-light btn-lg text-white">دیدن محصولات</a>
+            </div>
         </div>
+
+        <!-- Slide 2 -->
+        <div class="carousel-item">
+            <img src="/uploads/Home/Hero2.png" class="d-block w-100" alt="Hero 2">
+            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center h-100">
+                <h1 class="fw-bold display-5">پشتیبانی و مشاوره رایگان</h1>
+                <p class="lead">تیم ما آماده پاسخگویی به سوالات و ارائه مشاوره تخصصی است</p>
+                <a href="/Contact/RequestConsultation" class="btn btn-light btn-lg text-white">درخواست مشاوره</a>
+            </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="carousel-item">
+            <img src="/uploads/Home/Hero3.png" class="d-block w-100" alt="Hero 3">
+            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center h-100">
+                <h1 class="fw-bold display-5">ارسال سریع و مطمئن</h1>
+                <p class="lead">محصولات شما در کوتاه‌ترین زمان به دستتان می‌رسد</p>
+                <a href="/Shipping" class="btn btn-light btn-lg text-white">اطلاعات ارسال</a>
+            </div>
+        </div>
+
     </div>
+
+    <!-- Controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">قبلی</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">بعدی</span>
+    </button>
 </section>
+
+
+
 
 <section class="categories container my-5">
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -93,5 +130,34 @@
 
     </div>
 </section>
+
+
+<section class="bg-light py-5 mt-5" dir="rtl">
+    <div class="container text-center">
+        <h2 class="h2 fw-bold text-dark mb-3">مشاوره رایگان با متخصصان ما</h2>
+        <p class="fs-5 text-muted mb-4">
+            اگر سوالی دارید یا نیاز به راهنمایی دارید، تیم پشتیبانی ما آماده پاسخگویی و مشاوره رایگان به شماست.
+        </p>
+
+        <div class="d-flex justify-content-center flex-wrap gap-3 mb-4">
+            <a href="tel:+982612345678"
+               class="btn btn-danger d-flex align-items-center gap-2 rounded-pill shadow px-4 py-2">
+                <i class="bi bi-telephone-fill"></i> تماس تلفنی
+            </a>
+
+            <a href="https://wa.me/989123456789"
+               class="btn btn-success d-flex align-items-center gap-2 rounded-pill shadow px-4 py-2">
+                <i class="bi bi-whatsapp"></i> واتساپ
+            </a>
+
+            <a href="/Contact/RequestConsultation"
+               class="btn btn-indigo d-flex align-items-center gap-2 rounded-pill shadow px-4 py-2"
+               style="background-color:#4f46e5; border:none; color:#ffffff;">
+                <i class="bi bi-person-lines-fill"></i> درخواست مشاوره
+            </a>
+        </div>
+    </div>
+</section>
+
 
 

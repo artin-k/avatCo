@@ -2,10 +2,29 @@
 @{
     ViewData["Title"] = "product";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var categories = ViewBag.Categories as List<avatCo.Models.Category>;
 }
 
 
 <a href="/admin/products/create">Add New Product</a>
+<a href="/admin/products/addCategory">Add New Category</a>
+
+<h4>دسته‌بندی‌ها</h4>
+<ul class="list-group mb-4">
+    <thead>
+        <tr><th>name</th><th>description</th></tr>
+    </thead>
+    @foreach (var category in categories)
+    {
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            @category.Name
+            <span class="badge bg-primary rounded-pill">
+                تعداد محصولات: @category.Products?.Count() ?? 0
+            </span>
+        </li>
+    }
+</ul>
+
 
 <table>
     <thead>
