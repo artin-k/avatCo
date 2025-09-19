@@ -1,0 +1,214 @@
+﻿@model IEnumerable<avatCo.Models.Category>
+
+@{
+    ViewData["Title"] = "Categories";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Categories</h2>
+
+<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">Add Category</button>
+
+<table class="table mt-3">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var c in Model)
+        {
+            <tr>
+                <td>
+                    @if (!string.IsNullOrEmpty(c.ImageUrl))
+                    {
+                        <img src="@c.ImageUrl" alt="@c.Name" width="60" height="60" style="object-fit:cover;" />
+                    }
+                </td>
+                <td>@c.Name</td>
+                <td>@c.Description</td>
+                <td>
+                    <button class="btn btn-success" onclick="openEditModal(@c.Id)">Edit</button>
+                    <button class="btn btn-danger" onclick="deleteCategory(@c.Id)">Delete</button>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Create Modal -->
+<div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createCategoryForm" method="post" enctype="multipart/form-data"
+                      action="@Url.Action("Create","Categories", new { area = "Admin" })">
+
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label for="Name" class="form-label">Category Image</label>
+                        <input type="file" id="ImageFile" name="ImageFile" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="Name" class="form-label">Name</label>
+                        <input id="Name" name="Name" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="Description" class="form-label">Description</label>
+                        <textarea id="Description" name="Description" class="form-control"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editCategoryForm" method="post" enctype="multipart/form-data"
+                      action="@Url.Action("Edit", "Categories", new { area = "Admin" })">
+
+                    @Html.AntiForgeryToken()
+                     
+                    <input type="hidden" name="Id" />
+
+                    <div class="mb-3">
+                        <label for="Name" class="form-label">Category Image</label>
+                        <input type="file" id="ImageFile" name="ImageFile" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Name</label>
+                        <input name="Name" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="Description" class="form-control"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        // Make openEditModal globally accessible
+        function openEditModal(id) {
+            $.getJSON("/Admin/Categories/Edit/" + id, function (data) {
+                $("#editCategoryForm input[name='Id']").val(data.id);
+                $("#editCategoryForm input[name='Name']").val(data.name);
+                $("#editCategoryForm textarea[name='Description']").val(data.description);
+
+                // Show preview if image exists
+                if (data.imagePath) {
+                    $("#currentCategoryImage").attr("src", data.imagePath).show();
+                } else {
+                    $("#currentCategoryImage").hide();
+                }
+
+                $("#editModal").modal("show");
+            });
+        }
+
+
+        $(function () {
+            // Setup anti-forgery token for AJAX
+            $.ajaxSetup({
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                }
+            });
+
+            // Create form submit
+            $("#createCategoryForm").on("submit", function (e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: $(this).attr("action"),
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (res) {
+                        $("#createModal").modal('hide'); // ✅ correct modal
+                        location.reload();
+                    },
+                    error: function (xhr) {
+                        alert("Error: " + xhr.status + " " + xhr.responseText);
+                    }
+                });
+            });
+
+            // Edit form submit
+            $("#editCategoryForm").on("submit", function (e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: $(this).attr("action"),
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (res) {
+                        $("#editModal").modal('hide'); // ✅ correct modal
+                        location.reload();
+                    },
+                    error: function (xhr) {
+                        alert("Error: " + xhr.status + " " + xhr.responseText);
+                    }
+                });
+            });
+        });
+
+
+        function deleteCategory(id) {
+            if (!confirm("Are you sure you want to delete this category?")) {
+                return;
+            }
+
+            $.ajax({
+                url: "/Admin/Categories/Delete/" + id,
+                type: "POST",
+                data: {
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (res) {
+                    if (res.success) {
+                        location.reload();
+                    } else {
+                        alert(res.message || "Delete failed");
+                    }
+                },
+                error: function (xhr) {
+                    alert("Error: " + xhr.status + " " + xhr.responseText);
+                }
+            });
+        }
+
+    </script>
+}

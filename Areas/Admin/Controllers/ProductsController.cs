@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 namespace avatCo.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Route("Admin/[controller]/[action]/")]
     public class ProductsController : Controller
     {
         private readonly AvatDbContext _context;
@@ -15,7 +14,7 @@ namespace avatCo.Areas.Admin.Controllers
             _context = context;
         }
 
-        [HttpGet("")]
+        [HttpGet]
         public IActionResult Index()
         {
             var categories = _context.Categories.ToList();
@@ -54,7 +53,7 @@ namespace avatCo.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var product = await _context.Products.FindAsync(id);
@@ -62,52 +61,39 @@ namespace avatCo.Areas.Admin.Controllers
             return View(product);
         }
 
-
-        [HttpPost("{id}")]
-        public async Task<IActionResult> Edit(int id, Product product, IFormFile? imageFile)
+        [HttpPost]
+        public async Task<IActionResult> Edit(Product products)
         {
-            Console.WriteLine("✏️ Edit product hit");
+            /*            if (ModelState.IsValid)
+                        {*/
 
-            if (!ModelState.IsValid)
+            var existing = await _context.Products.FindAsync(products.Id);
+            if (existing != null)
             {
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+
+                existing.Title = products.Title;
+                existing.Description = products.Description;
+
+                if (products.ImageFile != null && products.ImageFile.Length > 0)
                 {
-                    Console.WriteLine("❌ Model error: " + error.ErrorMessage);
-                }
-                return View(product);
-            }
+                    var fileName = Path.GetFileName(products.ImageFile.FileName);
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/Products", fileName);
 
-            var dbProduct = await _context.Products.FindAsync(product.Id);
-            if (dbProduct == null)
-            {
-                Console.WriteLine("❌ Product not found");
-                return NotFound();
-            }
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await products.ImageFile.CopyToAsync(stream);
+                    }
 
-            if (imageFile != null && imageFile.Length > 0)
-            {
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
-                var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "products");
-
-                if (!Directory.Exists(uploadPath))
-                    Directory.CreateDirectory(uploadPath);
-
-                var filePath = Path.Combine(uploadPath, fileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await imageFile.CopyToAsync(stream);
+                    existing.ImageUrl = "/uploads/Products/" + fileName;
                 }
 
-                dbProduct.ImageUrl = "/uploads/products/" + fileName;
+                _context.Update(existing);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
+            return NotFound();
 
-            dbProduct.Title = product.Title;
-            dbProduct.Description = product.Description;
-            dbProduct.Price = product.Price;
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            /*            }*/
         }
 
         [HttpPost]

@@ -17,13 +17,15 @@ namespace avatCo.Areas.Home.Controllers
         }
 
         [HttpGet("")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var model = new HomePageViewModel
             {
                 HeroTitle = "Welcome to Avat Co",
                 HeroSubtitle = "Scalable solutions for modern businesses",
-                FeaturedProducts = _context.Products.ToList()
+                FeaturedProducts = await _context.Products.ToListAsync(),
+                Categories = await _context.Categories.ToListAsync()
+
             };
 
             return View(model);

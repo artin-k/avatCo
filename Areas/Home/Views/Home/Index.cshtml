@@ -51,40 +51,49 @@
 </section>
 
 
-
-
 <section class="categories container my-5">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h4>دسته بندی ها</h4>
         <a href="/Products" class="btn btn-outline-dark">همه</a>
     </div>
 
-    <div class="row g-3">
-        <div class="col-6 col-md-3">
-            <div class="card text-center h-100 category-card">
-                <img src="~/uploads/Home/blood.png" class="category-img" alt="خون" />
-                <div class="card-body"><h6>خون</h6></div>
-            </div>
+    <h2 class="mt-5">Explore Categories</h2>
+    <div class="scroll-container">
+        <button class="scroll-btn prev-btn">&lt;</button>
+        <div class="row g-3 flex-nowrap overflow-auto scrollable-row">
+            @foreach (var cat in Model.Categories)
+            {
+                <div class="col-6 col-md-3 flex-shrink-0">
+                    <div class="card text-center h-100 category-card">
+                        <img src="@cat.ImageUrl" class="category-img" alt="@cat.Name" />
+                        <div class="card-body">
+                            <h6>@cat.Name</h6>
+                            <h6>@cat.Description</h6>
+                            <a href="@Url.Action("Details", "Categories", new { id = cat.Id })" class="stretched-link"></a>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
-        <div class="col-6 col-md-3">
-            <div class="card text-center h-100 category-card">
-                <img src="~/uploads/Home/bone.jpg" class="category-img" alt="استخوان" />
-                <div class="card-body"><h6>استخوان</h6></div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="card text-center h-100 category-card">
-                <img src="~/uploads/Home/Meat.jpg" class="category-img" alt="گوشت" />
-                <div class="card-body"><h6>گوشت</h6></div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="card text-center h-100 category-card">
-                <img src="~/uploads/Home/skin.jpg" class="category-img" alt="پوست ها" />
-                <div class="card-body"><h6>پوست ها</h6></div>
-            </div>
-        </div>
+        <button class="scroll-btn next-btn">&gt;</button>
     </div>
+
+
+
+    <script>
+        const scrollContainer = document.querySelector('.scrollable-row');
+        const prevBtn = document.querySelector('.prev-btn');
+        const nextBtn = document.querySelector('.next-btn');
+
+        prevBtn.addEventListener('click', () => {
+            scrollContainer.scrollLeft -= 220; // Adjust based on card width + margin
+        });
+
+        nextBtn.addEventListener('click', () => {
+            scrollContainer.scrollLeft += 220; // Adjust based on card width + margin
+        });
+    </script>
+
 </section>
 
 @* Promos + Services section (RTL) *@

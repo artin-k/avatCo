@@ -1,4 +1,6 @@
-﻿namespace avatCo.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace avatCo.Models
 {
     public class Product
     {
@@ -9,9 +11,11 @@
         public decimal Price { get; set; } = decimal.Zero;
         // Foreign Key
         public int CategoryId { get; set; }
-
         // Navigation
         public Category Category { get; set; }
+
+        [NotMapped]
+        public IFormFile? ImageFile { get; set; }
 
         public bool IsActive { get; set; } = false;
     }

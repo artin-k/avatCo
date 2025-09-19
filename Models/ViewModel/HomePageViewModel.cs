@@ -1,4 +1,6 @@
-﻿namespace avatCo.Models.ViewModels
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace avatCo.Models.ViewModels
 {
     public class HomePageViewModel
     {
@@ -7,5 +9,7 @@
         public List<ServiceItem> Services { get; set; } = new();
         public List<Product> FeaturedProducts { get; set; } = new();
         public IEnumerable<Category> Categories { get; set; }
+
+
     }
 }
