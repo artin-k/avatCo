@@ -54,11 +54,24 @@ namespace avatCo.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(int id)
+        public IActionResult GetProduct(int id)
         {
-            var product = await _context.Products.FindAsync(id);
-            if (product == null) return NotFound();
-            return View(product);
+            var product = _context.Products
+                .Include(p => p.Category)
+                .FirstOrDefault(p => p.Id == id);
+
+            if (product == null)
+                return NotFound();
+
+            return Json(new
+            {
+                id = product.Id,
+                title = product.Title,
+                price = product.Price,
+                description = product.Description,
+                categoryId = product.CategoryId,
+                imageUrl = product.ImageUrl != null ? Url.Content("~/uploads/Products/" + product.ImageUrl) : null
+            });
         }
 
         [HttpPost]
