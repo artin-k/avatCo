@@ -18,5 +18,7 @@ namespace avatCo.Models
         public IFormFile? ImageFile { get; set; }
 
         public bool IsActive { get; set; } = false;
+        public bool IsSpecialOffer { get; set; } = false;
+
     }
 }
