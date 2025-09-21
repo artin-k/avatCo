@@ -23,11 +23,10 @@ namespace avatCo.Areas.Home.Controllers
             {
                 HeroTitle = "Welcome to Avat Co",
                 HeroSubtitle = "Scalable solutions for modern businesses",
-                FeaturedProducts = await _context.Products.ToListAsync(),
+                Products = await _context.Products.ToListAsync(),
                 Categories = await _context.Categories.ToListAsync()
 
             };
-
             return View(model);
         }
 

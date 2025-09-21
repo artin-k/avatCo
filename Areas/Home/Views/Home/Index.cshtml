@@ -50,7 +50,37 @@
     </button>
 </section>
 
+<!-- Special Offers -->
+<section class="special-offers container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4>پیشنهادات ویژه</h4>
+        <a href="/Products" class="btn btn-outline-dark">همه</a>
+    </div>
 
+    <h2 class="mt-4">Special Offers</h2>
+    <div class="scroll-container">
+        <button class="scroll-btn prev-btn">&lt;</button>
+        <div class="row g-3 flex-nowrap overflow-auto scrollable-row">
+            @foreach (var so in Model.Products.Where(p => p.IsSpecialOffer))
+            {
+                <div class="col-6 col-md-3 flex-shrink-0">
+                    <div class="card text-center h-100 category-card">
+                        <img src="@so.ImageUrl" class="category-img" alt="@so.Title" />
+                        <div class="card-body">
+                            <h6>@so.Title</h6>
+                            <p class="text-muted">@so.Description</p>
+                            <a href="@Url.Action("Details", "Products", new { id = so.Id })" class="stretched-link"></a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <button class="scroll-btn next-btn">&gt;</button>
+    </div>
+</section>
+
+
+<!--Categories-->
 <section class="categories container my-5">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h4>دسته بندی ها</h4>
