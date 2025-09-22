@@ -3,5 +3,59 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>heyyyyyyyyyyyyyyyyyy</h2>
+<!-- Shop Header -->
+<section class="container my-5 text-center">
+    <h2 class="fw-bold">@Model.ShopName</h2>
+    <p class="text-muted">@Model.ShopDescription</p>
+</section>
 
+<!-- Categories Section -->
+<section class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold">دسته بندی ها</h4>
+        <a href="/Products" class="btn btn-outline-dark">مشاهده همه</a>
+    </div>
+
+    <div class="row g-3">
+        @foreach (var c in Model.Categories)
+        {
+            <div class="col-6 col-md-3">
+                <a href="@Url.Action("Index", "Products", new { categoryId = c.Id })" class="text-decoration-none">
+                    <div class="card h-100 text-center category-card shadow-sm">
+                        <img src="@c.ImageUrl" class="category-img card-img-top" alt="@c.Name" />
+                        <div class="card-body">
+                            <h6 class="fw-semibold text-dark">@c.Name</h6>
+                            <p class="small text-muted">@c.Description</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- Products Section -->
+<section class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold">محصولات</h4>
+        <a href="/Products" class="btn btn-outline-dark">مشاهده همه</a>
+    </div>
+
+    <div class="row g-3">
+        @foreach (var p in Model.Products)
+        {
+            <div class="col-6 col-md-3">
+                <div class="card h-100 text-center product-card shadow-sm">
+                    <img src="@p.ImageUrl" class="card-img-top" alt="@p.Title" style="height:200px; object-fit:cover;" />
+                    <div class="card-body">
+                        <h6 class="fw-semibold">@p.Title</h6>
+                        <p class="small text-muted">@p.Description</p>
+                        <a href="@Url.Action("Details", "Products", new { id = p.Id })" class="btn btn-sm btn-dark mt-2">
+                            مشاهده جزئیات
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>

@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using avatCo.Models;
+using avatCo.Models.ViewModel;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace avatCo.Areas.Shop
 {
@@ -6,10 +9,23 @@ namespace avatCo.Areas.Shop
     [Route("Shop")]
     public class ShopController : Controller
     {
-        [HttpGet("")]
-        public IActionResult Index()
+        private readonly AvatDbContext _context;
+        public ShopController(AvatDbContext context)
         {
-            return View();
+            _context = context;
+        }
+
+        [HttpGet("")]
+        public async Task<IActionResult> Index()
+        {
+            var model = new ShopViewModel()
+            {
+                ShopName = "",
+                ShopDescription = "",
+                Products = await _context.Products.ToListAsync(),
+                Categories = await _context.Categories.ToListAsync()
+            };
+            return View(model);
         }
     }
 }
