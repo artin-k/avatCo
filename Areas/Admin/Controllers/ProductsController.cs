@@ -6,7 +6,7 @@ namespace avatCo.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class ProductsController : Controller
-    {
+    { 
         private readonly AvatDbContext _context;
 
         public ProductsController(AvatDbContext context)

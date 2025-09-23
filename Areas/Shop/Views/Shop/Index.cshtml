@@ -1,38 +1,52 @@
-﻿@model avatCo.Models.ViewModel.ShopViewModel
+﻿@model avatCo.Models.ViewModel.ProductDetailsViewModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!-- Shop Header -->
-<section class="container my-5 text-center">
-    <h2 class="fw-bold">@Model.ShopName</h2>
-    <p class="text-muted">@Model.ShopDescription</p>
-</section>
+<!-- Shop Header with Search --> 
+<section class="bg-light py-5"> 
+    <div class="container text-center">
+    <h2 class="fw-bold mb-3">@Model.Title</h2> 
+    <p class="text-muted mb-4">@Model.Description</p>
+    <!-- Right: Icons --> 
+        <div class="d-flex align-items-center mt-3 mt-lg-0">
+            <!-- AJAX Search -->
+            <div class="position-relative me-3">
+                <input type="text" id="searchBox" class="form-control form-control-sm" placeholder="جستجو..." autocomplete="off" /> 
+                <!-- Search Results Dropdown -->
 
-<!-- Categories Section -->
-<section class="container my-5">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="fw-bold">دسته بندی ها</h4>
-        <a href="/Products" class="btn btn-outline-dark">مشاهده همه</a>
+                <div id="searchResults" class="list-group position-absolute w-100 shadow d-none" style="z-index: 2000;">
+
+                </div>
+                </div> 
+                <div class="input-group">
+                    <input type="text" id="searchBox" class="form-control form-control-sm" placeholder="جستجو..." autocomplete="off" /> 
+                    <button id="searchBtn" class="btn btn-outline-light"><i class="bi bi-search"></i></button> 
+                </div> 
+                <div id="searchResults" class="list-group position-absolute w-100 shadow d-none" style="z-index: 2000;">
+
+                </div>
+                <a href="#" class="nav-icon me-3">
+                    <i class="bi bi-cart"></i></a> 
+                <a href="#" class="nav-icon">
+                    <i class="bi bi-person"></i></a> 
+         </div>
     </div>
-
-    <div class="row g-3">
+</section> 
+<!-- Categories Section (buttons only) --> 
+<section class="container my-5"> 
+        <div class="d-flex justify-content-between align-items-center mb-3"> 
+            <h4 class="fw-bold">دسته‌بندی‌ها</h4>
+             <a href="/Products" class="btn btn-outline-dark">مشاهده همه</a> 
+        </div> 
+    <div class="d-flex flex-wrap gap-2">
         @foreach (var c in Model.Categories)
         {
-            <div class="col-6 col-md-3">
-                <a href="@Url.Action("Index", "Products", new { categoryId = c.Id })" class="text-decoration-none">
-                    <div class="card h-100 text-center category-card shadow-sm">
-                        <img src="@c.ImageUrl" class="category-img card-img-top" alt="@c.Name" />
-                        <div class="card-body">
-                            <h6 class="fw-semibold text-dark">@c.Name</h6>
-                            <p class="small text-muted">@c.Description</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        }
-    </div>
+            <a href="@Url.Action("Index", "Products", new { categoryId = c.Id })" class="btn btn-outline-secondary"> @c.Name </a>
+        } 
+    </div> 
 </section>
+
 
 <!-- Products Section -->
 <section class="container my-5">
@@ -41,21 +55,175 @@
         <a href="/Products" class="btn btn-outline-dark">مشاهده همه</a>
     </div>
 
-    <div class="row g-3">
+    <div class="row g-4">
+        @if (!Model.Products.Any())
+        {
+            <p class="text-danger text-center mt-4">محصولی یافت نشد.</p>
+        }
         @foreach (var p in Model.Products)
         {
             <div class="col-6 col-md-3">
-                <div class="card h-100 text-center product-card shadow-sm">
-                    <img src="@p.ImageUrl" class="card-img-top" alt="@p.Title" style="height:200px; object-fit:cover;" />
-                    <div class="card-body">
+                <div class="card h-100 product-card shadow-sm border-0">
+                    <img src="@p.ImageUrl" class="card-img-top" alt="@p.Title"
+                         style="height:220px; object-fit:cover; border-top-left-radius:1rem; border-top-right-radius:1rem;" />
+                    <div class="card-body text-center">
                         <h6 class="fw-semibold">@p.Title</h6>
-                        <p class="small text-muted">@p.Description</p>
-                        <a href="@Url.Action("Details", "Products", new { id = p.Id })" class="btn btn-sm btn-dark mt-2">
+                        <p class="small text-muted mb-1">@p.Price.ToString("N0") تومان</p>
+                        <button class="btn btn-sm btn-dark rounded-pill mt-2"
+                                data-bs-toggle="modal" data-bs-target="#productDetailsModal">
                             مشاهده جزئیات
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
         }
     </div>
 </section>
+
+
+<!-- Product Details Modal -->
+<div class="modal fade" id="productDetailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@Model.Title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <img src="@Model.ImageUrl" class="img-fluid border rounded" alt="@Model.Title" />
+                    </div>
+                    <div class="col-md-6">
+                        <h4 class="text-danger">@Model.Price.ToString("N0") تومان</h4>
+                        <p class="text-muted">@Model.CategoryName</p>
+                        <button class="btn btn-danger mt-3">🛒 افزودن به سبد</button>
+
+                        <hr />
+                        <h5>مشخصات</h5>
+                        <ul>
+                            <li><b>برند:</b> @Model.Brand</li>
+                            <li><b>جنس:</b> @Model.Material</li>
+                            <li><b>موجودی:</b> @(Model.IsActive ? "بله" : "خیر")</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <hr />
+
+                <!-- Tabs -->
+                <ul class="nav nav-tabs" id="productTabs">
+                    <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#desc">توضیحات</a></li>
+                    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#opinions">نظرات</a></li>
+                    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#qa">سوالات</a></li>
+                </ul>
+
+                <div class="tab-content mt-3">
+                    <div class="tab-pane fade show active" id="desc">@Model.Description</div>
+
+                    <div class="tab-pane fade" id="opinions">
+                        @if (Model.Opinions?.Any() == true)
+                        {
+                            @foreach (var op in Model.Opinions)
+                            {
+                                <div class="border p-2 mb-2 rounded">
+                                    <strong>@op.UserName</strong> ⭐ @op.Rating
+                                    <p>@op.Comment</p>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-muted">هنوز نظری ثبت نشده است.</p>
+                        }
+                        <button class="btn btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#addOpinionModal">
+                            افزودن نظر
+                        </button>
+                    </div>
+
+                    <div class="tab-pane fade" id="qa">
+                        <p class="text-muted">فعلاً پرسشی ثبت نشده.</p>
+                        <button class="btn btn-outline-success mt-2" data-bs-toggle="modal" data-bs-target="#askQuestionModal">
+                            ثبت سوال
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Opinion Modal -->
+<div class="modal fade" id="addOpinionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">افزودن نظر</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="addOpinionForm" method="post" action="@Url.Action("AddOpinion", "Products")">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="Rating" class="form-label">امتیاز</label>
+                        <input type="number" name="Rating" class="form-control" min="1" max="5" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="Comment" class="form-label">نظر شما</label>
+                        <textarea name="Comment" class="form-control" required></textarea>
+                    </div>
+                    <input type="hidden" name="ProductId" value="@Model.Id" />
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">ثبت نظر</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+    <script>
+        // Live search trigger
+        $("#searchBox").on("input", function () {
+            let q = $(this).val();
+            if (q.length < 2) {
+                $("#searchResults").addClass("d-none");
+                return;
+            }
+
+            $.get("/Products/Search", { term: q }, function (data) {
+                let results = $("#searchResults").empty();
+                if (data && data.length > 0) {
+                    data.forEach(item => {
+                        results.append(`<a href="/Products/Details/${item.id}" class="list-group-item list-group-item-action">${item.title}</a>`);
+                    });
+                    results.removeClass("d-none");
+                } else {
+                    results.append(`<div class="list-group-item text-muted">نتیجه‌ای یافت نشد</div>`);
+                    results.removeClass("d-none");
+                }
+            });
+        });
+
+        // Submit opinion AJAX
+        $(document).on("submit", "#addOpinionForm", function (e) {
+            e.preventDefault();
+            var form = $(this);
+            $.post(form.attr("action"), form.serialize())
+                .done(function (res) {
+                    if (res.success) {
+                        location.reload();
+                    } else {
+                        alert(res.message || "خطا در ثبت نظر");
+                    }
+                })
+                .fail(() => alert("خطای سرور"));
+        });
+    </script>
+}

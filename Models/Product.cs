@@ -20,5 +20,6 @@ namespace avatCo.Models
         public bool IsActive { get; set; } = false;
         public bool IsSpecialOffer { get; set; } = false;
 
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
     }
 }
