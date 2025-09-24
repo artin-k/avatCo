@@ -1,4 +1,4 @@
-﻿@model avatCo.Models.ViewModel.ProductDetailsViewModel
+﻿@model avatCo.Models.ViewModel.ShopViewModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -70,9 +70,12 @@
                         <h6 class="fw-semibold">@p.Title</h6>
                         <p class="small text-muted mb-1">@p.Price.ToString("N0") تومان</p>
                         <button class="btn btn-sm btn-dark rounded-pill mt-2"
-                                data-bs-toggle="modal" data-bs-target="#productDetailsModal">
+                                type="button"
+                                onclick="openDetailProductModal(@p.Id)">
                             مشاهده جزئیات
                         </button>
+
+
                     </div>
                 </div>
             </div>
@@ -82,99 +85,96 @@
 
 
 <!-- Product Details Modal -->
+<!-- Product Details Modal (static shell, body will be filled by JS) -->
 <div class="modal fade" id="productDetailsModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">@Model.Title</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <h5 class="modal-title" id="pd-modal-title">...</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
 
+            <div class="modal-body p-3">
                 <div class="row">
-                    <div class="col-md-6">
-                        <img src="@Model.ImageUrl" class="img-fluid border rounded" alt="@Model.Title" />
+                    <div class="col-md-6 text-center">
+                        <img id="pd-modal-image" src="" alt="" class="img-fluid border rounded" style="max-height:360px; object-fit:cover;" />
                     </div>
+
                     <div class="col-md-6">
-                        <h4 class="text-danger">@Model.Price.ToString("N0") تومان</h4>
-                        <p class="text-muted">@Model.CategoryName</p>
-                        <button class="btn btn-danger mt-3">🛒 افزودن به سبد</button>
+                        <h4 class="text-danger" id="pd-modal-price">...</h4>
+                        <p class="text-muted" id="pd-modal-category">...</p>
+                        <button class="btn btn-danger mt-2" id="pd-add-to-cart">🛒 افزودن به سبد</button>
 
                         <hr />
                         <h5>مشخصات</h5>
-                        <ul>
-                            <li><b>برند:</b> @Model.Brand</li>
-                            <li><b>جنس:</b> @Model.Material</li>
-                            <li><b>موجودی:</b> @(Model.IsActive ? "بله" : "خیر")</li>
+                        <ul class="list-unstyled small">
+                            <li><b>برند:</b> <span id="pd-modal-brand">-</span></li>
+                            <li><b>جنس:</b> <span id="pd-modal-material">-</span></li>
+                            <li><b>موجودی:</b> <span id="pd-modal-stock">-</span></li>
                         </ul>
                     </div>
                 </div>
 
                 <hr />
 
-                <!-- Tabs -->
-                <ul class="nav nav-tabs" id="productTabs">
-                    <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#desc">توضیحات</a></li>
-                    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#opinions">نظرات</a></li>
-                    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#qa">سوالات</a></li>
+                <ul class="nav nav-tabs mt-2" id="productTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="tab-desc" data-bs-toggle="tab" href="#tab-content-desc" role="tab">توضیحات</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="tab-opinions" data-bs-toggle="tab" href="#tab-content-opinions" role="tab">نظرات</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="tab-qa" data-bs-toggle="tab" href="#tab-content-qa" role="tab">سوالات</a>
+                    </li>
                 </ul>
 
                 <div class="tab-content mt-3">
-                    <div class="tab-pane fade show active" id="desc">@Model.Description</div>
-
-                    <div class="tab-pane fade" id="opinions">
-                        @if (Model.Opinions?.Any() == true)
-                        {
-                            @foreach (var op in Model.Opinions)
-                            {
-                                <div class="border p-2 mb-2 rounded">
-                                    <strong>@op.UserName</strong> ⭐ @op.Rating
-                                    <p>@op.Comment</p>
-                                </div>
-                            }
-                        }
-                        else
-                        {
-                            <p class="text-muted">هنوز نظری ثبت نشده است.</p>
-                        }
-                        <button class="btn btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#addOpinionModal">
-                            افزودن نظر
-                        </button>
+                    <div class="tab-pane fade show active" id="tab-content-desc" role="tabpanel">
+                        <div id="pd-modal-description"></div>
                     </div>
 
-                    <div class="tab-pane fade" id="qa">
+                    <div class="tab-pane fade" id="tab-content-opinions" role="tabpanel">
+                        <div id="pd-opinions-list" class="mb-3"></div>
+
+                        <!-- Open Add Opinion modal -->
+                        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addOpinionModal">افزودن نظر</button>
+                    </div>
+
+                    <div class="tab-pane fade" id="tab-content-qa" role="tabpanel">
                         <p class="text-muted">فعلاً پرسشی ثبت نشده.</p>
-                        <button class="btn btn-outline-success mt-2" data-bs-toggle="modal" data-bs-target="#askQuestionModal">
-                            ثبت سوال
-                        </button>
                     </div>
                 </div>
+            </div>
 
+            <div class="modal-footer">
+                <small class="text-muted me-auto">مشاهده جزئیات محصول</small>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Opinion Modal -->
+<!-- Add Opinion Modal (separate modal) -->
 <div class="modal fade" id="addOpinionModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">افزودن نظر</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
             <form id="addOpinionForm" method="post" action="@Url.Action("AddOpinion", "Products")">
                 @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title">افزودن نظر</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
                 <div class="modal-body">
+                    <input type="hidden" name="ProductId" id="op-product-id" value="" />
                     <div class="mb-3">
-                        <label for="Rating" class="form-label">امتیاز</label>
+                        <label class="form-label">امتیاز</label>
                         <input type="number" name="Rating" class="form-control" min="1" max="5" required />
                     </div>
                     <div class="mb-3">
-                        <label for="Comment" class="form-label">نظر شما</label>
+                        <label class="form-label">نظر شما</label>
                         <textarea name="Comment" class="form-control" required></textarea>
                     </div>
-                    <input type="hidden" name="ProductId" value="@Model.Id" />
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">ثبت نظر</button>
@@ -187,9 +187,111 @@
 
 
 
+
 @section Scripts {
     <script>
-        // Live search trigger
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" ></script>
+
+          // Ensure jQuery is loaded before this
+
+          // Global function used by your "مشاهده جزئیات" buttons:
+          // <button onclick="openDetailProductModal( p.Id)">مشاهده جزئیات</button>
+          window.openDetailProductModal = function (id) {
+            if (!id) return alert("Invalid id");
+
+            $.getJSON("/Shop/GetProduct/" + id)
+              .done(function (data) {
+                // Fill modal fields
+                $("#pd-modal-title").text(data.title || "-");
+                $("#pd-modal-image").attr("src", data.imageUrl || "/images/placeholder.png");
+                $("#pd-modal-image").attr("alt", data.title || "");
+                $("#pd-modal-price").text(data.price ? (Number(data.price).toLocaleString() + " تومان") : "-");
+                $("#pd-modal-category").text(data.categoryName || "-");
+                $("#pd-modal-brand").text(data.brand || "-");
+                $("#pd-modal-material").text(data.material || "-");
+                $("#pd-modal-stock").text(data.isActive ? "بله" : "خیر");
+                $("#pd-modal-description").html(data.description || "");
+
+                // Set productId for add-opinion form
+                $("#op-product-id").val(data.id);
+
+                // Render opinions
+                function renderOpinions(list) {
+                  var $out = $("#pd-opinions-list").empty();
+                  if (!list || list.length === 0) {
+                    $out.append('<p class="text-muted">هنوز نظری ثبت نشده است.</p>');
+                    return;
+                  }
+                  list.forEach(function (op) {
+                    var tpl = `<div class="border p-2 mb-2 rounded">
+                                 <strong>${escapeHtml(op.userName || "کاربر")}</strong>
+                                 <span class="text-warning"> ${op.rating || ""} ★</span>
+                                 <div class="small text-muted">${op.createdAt ? new Date(op.createdAt).toLocaleString() : ""}</div>
+                                 <p class="mt-1 mb-0">${escapeHtml(op.comment || "")}</p>
+                               </div>`;
+                    $out.append(tpl);
+                  });
+                }
+
+                renderOpinions(data.opinions || []);
+
+                // Show modal
+                var modalEl = document.getElementById('productDetailsModal');
+                var bsModal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                bsModal.show();
+              })
+              .fail(function (xhr) {
+                var msg = "خطا در بارگذاری جزئیات محصول";
+                if (xhr && xhr.status === 404) msg = "محصولی یافت نشد";
+                alert(msg);
+              });
+          };
+
+          // helper to avoid XSS when injecting simple text
+          function escapeHtml(s) {
+            if (!s) return "";
+            return String(s)
+              .replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+          }
+
+          // Submit opinion via AJAX and refresh modal opinions on success
+          $(document).on("submit", "#addOpinionForm", function (e) {
+            e.preventDefault();
+            var $form = $(this);
+            var formData = $form.serialize();
+
+            // get antiforgery token and include in header
+            var token = $form.find("input[name='__RequestVerificationToken']").val();
+
+            $.ajax({
+              url: $form.attr("action"),
+              method: "POST",
+              data: formData,
+              headers: token ? { "RequestVerificationToken": token } : {},
+            }).done(function (res) {
+              if (res && res.success) {
+                // close addOpinionModal
+                var addModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('addOpinionModal'));
+                addModal.hide();
+
+                // refresh product detail modal (reload data)
+                var productId = $("#op-product-id").val();
+                if (productId) openDetailProductModal(productId);
+              } else {
+                alert(res && res.message ? res.message : "خطا در ثبت نظر");
+              }
+            }).fail(function () {
+              alert("خطای سرور هنگام ثبت نظر");
+            });
+          });
+
+
+
+        // 🔹 Live search trigger
         $("#searchBox").on("input", function () {
             let q = $(this).val();
             if (q.length < 2) {
@@ -201,7 +303,13 @@
                 let results = $("#searchResults").empty();
                 if (data && data.length > 0) {
                     data.forEach(item => {
-                        results.append(`<a href="/Products/Details/${item.id}" class="list-group-item list-group-item-action">${item.title}</a>`);
+                        results.append(
+                            `<a href="javascript:void(0)"
+                                        onclick="loadProductDetails(${item.id})"
+                                        class="list-group-item list-group-item-action">
+                                        ${item.title}
+                                     </a>`
+                        );
                     });
                     results.removeClass("d-none");
                 } else {
@@ -211,14 +319,16 @@
             });
         });
 
-        // Submit opinion AJAX
+        // 🔹 Submit opinion form via AJAX
         $(document).on("submit", "#addOpinionForm", function (e) {
             e.preventDefault();
             var form = $(this);
+
             $.post(form.attr("action"), form.serialize())
                 .done(function (res) {
                     if (res.success) {
-                        location.reload();
+                        // Reload only the opinions section instead of refreshing full page
+                        loadProductDetails(res.productId);
                     } else {
                         alert(res.message || "خطا در ثبت نظر");
                     }

@@ -24,18 +24,18 @@ namespace avatCo.Areas.Shop
             {
                 query = query.Where(p => p.Title.Contains(q) || p.Description.Contains(q));
             }
-            var model = new ProductDetailsViewModel()
+
+            var model = new ShopViewModel
             {
-                Title = "",
-                Description = "",
-                IsActive = await _context.Products.Where(p => p.IsActive).AnyAsync(),
-                Price = await _context.Products.Where(p => p.IsActive).Select(p => p.Price).FirstOrDefaultAsync(),
-                Opinions = await _context.Reviews.ToListAsync(),
-                Products = await _context.Products.ToListAsync(),
+                ShopName = "avatCo Shop",
+                ShopDescription = "Welcome to avatCo Shop - Your one-stop destination for quality products!",
+                Products = await query.ToListAsync(),
                 Categories = await _context.Categories.ToListAsync()
             };
+
             return View(model);
         }
+
 
         [HttpGet("Search")]
         public async Task<IActionResult> Search(string term)
@@ -57,16 +57,58 @@ namespace avatCo.Areas.Shop
             return Json(results);
         }
 
-        public IActionResult Details(int id)
+        [HttpGet("GetProduct/{id}")]
+        public async Task<IActionResult> GetProduct(int id)
         {
-            var product = _context.Products
-                .Include(p => p.Reviews)
-
-                .FirstOrDefault(p => p.Id == id);
+            var product = await _context.Products
+                .Include(p => p.Reviews) // make sure you named it Reviews in Product model
+                .Include(p => p.Category)
+                .FirstOrDefaultAsync(p => p.Id == id);
 
             if (product == null) return NotFound();
 
-            return View(product);
+            var result = new
+            {
+                id = product.Id,
+                title = product.Title ?? "",
+                description = product.Description ?? "",
+                imageUrl = string.IsNullOrEmpty(product.ImageUrl) ? Url.Content("~/images/placeholder.png") : product.ImageUrl,
+                price = product.Price,
+                isActive = product.IsActive,
+//                brand = product.Brand ?? "",
+/*                material = product.Material ?? "",*/
+                categoryName = product.Category?.Name ?? "",
+/*                opinions = product.Reviews?.Select(r => new {
+                    userName = r.UserName,
+                    rating = r.Rating,
+                    comment = r.Comment,
+                    createdAt = r.CreatedAt
+                }).ToList() ?? new List<object>()*/
+            };
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddOpinion([FromForm] int ProductId, [FromForm] int Rating, [FromForm] string Comment)
+        {
+            var product = await _context.Products.FindAsync(ProductId);
+            if (product == null) return Json(new { success = false, message = "Product not found." });
+
+            var review = new Review
+            {
+                ProductId = ProductId,
+                UserName = "Guest", // replace with current user if auth exists
+                Rating = Rating,
+                Comment = Comment,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.Reviews.Add(review);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, productId = ProductId });
         }
 
     }
