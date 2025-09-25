@@ -17,40 +17,32 @@
 
             <!-- Right Column: Form -->
             <div class="col-12 col-md-6">
-                <form asp-action="Register" method="post">
+                <form asp-action="GetRegister" method="post" id="registerForm">
+                    <div>
+                        <h2 class="mb-4">ثبت نام</h2>
+                    </div>
                     <div class="form-group mb-3">
-                        <label asp-for="UserName" class="form-label"></label>
-                        <input asp-for="UserName" class="form-control" />
+                        <label asp-for="UserName" class="form-label" ></label>
+                        <input asp-for="UserName" class="form-control" name="UserName" placeholder="User Name" required/>
                         <span asp-validation-for="UserName" class="text-danger"></span>
                     </div>
 
                     <div class="form-group mb-3">
                         <label asp-for="Email" class="form-label"></label>
-                        <input asp-for="Email" type="email" class="form-control" />
+                        <input asp-for="Email" type="email" name="Email" class="form-control" placeholder="Email" required/>
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
 
                     <div class="form-group mb-3">
                         <label asp-for="Password" class="form-label"></label>
-                        <input asp-for="Password" type="password" class="form-control" />
+                        <input asp-for="Password" type="password" name="Password" class="form-control" placeholder="Password" required />
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
 
                     <div class="form-group mb-3">
                         <label asp-for="ConfirmPassword" class="form-label"></label>
-                        <input asp-for="ConfirmPassword" type="password" class="form-control" />
+                        <input asp-for="ConfirmPassword" type="password" name="Password" class="form-control" placeholder="Confirm password" required />
                         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label asp-for="MembershipType" class="form-label"></label>
-                        <select asp-for="MembershipType" class="form-control">
-                            <option value="">-- Select Membership Type --</option>
-                            <option value="Basic">Basic</option>
-                            <option value="Premium">Premium</option>
-                            <option value="VIP">VIP</option>
-                        </select>
-                        <span asp-validation-for="MembershipType" class="text-danger"></span>
                     </div>
 
                     <button type="submit" class="btn btn-primary">ثبت نام</button>
@@ -58,7 +50,7 @@
             </div>
         </div>
     </div>
-
+</div>
 
 @section Scripts {
  
@@ -85,6 +77,37 @@
                 }, 4000);
             }
         });
+
+
+        document.getElementById("registerForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const data = {
+                UserName: form.UserName.value,
+                Email: form.Email.value,
+                Password: form.Password.value
+            };
+
+            try {
+                const res = await fetch("/Profile/Register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                });
+
+                if (!res.ok) throw new Error("Failed to register");
+
+                const result = await res.json();
+                if (result.success) {
+                    window.location.href = result.redirectUrl; // 👈 go to profile
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Registration failed");
+            }
+        });
+
     </script>
 
 }

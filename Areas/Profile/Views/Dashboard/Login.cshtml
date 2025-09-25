@@ -1,0 +1,29 @@
+﻿@model avatCo.Models.ViewModel.LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5" style="max-width: 400px;">
+    <h2 class="mb-4">Login</h2>
+
+    <form method="post">
+        @Html.AntiForgeryToken()
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label">Email</label>
+            <input asp-for="Email" name="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label">Password</label>
+            <input asp-for="Password" type="password" name="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+@*         <a href=>forget password?</a> *@
+        <a href="~/Profile/Register">sign up</a>
+
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+</div>
