@@ -1,0 +1,90 @@
+﻿@model avatCo.Models.ViewModel.RegisterViewModel
+@{
+    ViewData["Title"] = "Sign Up";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="border">
+    <div class="container mt-5">
+        <div class="row g-3 align-items-center">
+            <!-- Left Column: Image -->
+            <div class="col-12 col-md-6 d-flex justify-content-center">
+                <div class="text-center mb-4">
+                    <img id="slideshow" class="RegSlide" src="/uploads/Register/RegPic1.jpg"  alt="pic" />
+                </div>
+            </div>
+
+            <!-- Right Column: Form -->
+            <div class="col-12 col-md-6">
+                <form asp-action="Register" method="post">
+                    <div class="form-group mb-3">
+                        <label asp-for="UserName" class="form-label"></label>
+                        <input asp-for="UserName" class="form-control" />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" type="email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Password" class="form-label"></label>
+                        <input asp-for="Password" type="password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="ConfirmPassword" class="form-label"></label>
+                        <input asp-for="ConfirmPassword" type="password" class="form-control" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="MembershipType" class="form-label"></label>
+                        <select asp-for="MembershipType" class="form-control">
+                            <option value="">-- Select Membership Type --</option>
+                            <option value="Basic">Basic</option>
+                            <option value="Premium">Premium</option>
+                            <option value="VIP">VIP</option>
+                        </select>
+                        <span asp-validation-for="MembershipType" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">ثبت نام</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+@section Scripts {
+ 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const images = [
+                "/uploads/Register/RegPic1.jpg",
+                "/uploads/Register/RegPic2.jpg",
+                "/uploads/Register/RegPic3.jpg"
+            ];
+
+            let currentIndex = 0;
+            const imgElement = document.getElementById("slideshow");
+
+            if (imgElement) {
+                setInterval(() => {
+                    imgElement.classList.add("fade-out");
+
+                    setTimeout(() => {
+                        currentIndex = (currentIndex + 1) % images.length;
+                        imgElement.src = images[currentIndex];
+                        imgElement.classList.remove("fade-out");
+                    }, 800);
+                }, 4000);
+            }
+        });
+    </script>
+
+}

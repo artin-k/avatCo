@@ -75,15 +75,17 @@ namespace avatCo.Areas.Shop
                 imageUrl = string.IsNullOrEmpty(product.ImageUrl) ? Url.Content("~/images/placeholder.png") : product.ImageUrl,
                 price = product.Price,
                 isActive = product.IsActive,
-//                brand = product.Brand ?? "",
-/*                material = product.Material ?? "",*/
+                brand = product.Brand ?? "",
+                material = product.Material ?? "",
                 categoryName = product.Category?.Name ?? "",
-/*                opinions = product.Reviews?.Select(r => new {
-                    userName = r.UserName,
-                    rating = r.Rating,
-                    comment = r.Comment,
-                    createdAt = r.CreatedAt
-                }).ToList() ?? new List<object>()*/
+                opinions = product.Reviews?
+                .Select(r => new Review
+                {
+                    UserName = r.UserName,
+                    Rating = r.Rating,
+                    Comment = r.Comment,
+                    CreatedAt = r.CreatedAt
+                }).ToList() ?? new List<Review>()
             };
 
             return Json(result);
@@ -112,4 +114,6 @@ namespace avatCo.Areas.Shop
         }
 
     }
+
 }
+

@@ -1,0 +1,17 @@
+﻿@model avatCo.Models.User
+@{
+    ViewData["Title"] = "User Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>profile</h3>
+
+<div class="card">
+    <div class="card-body">
+        <p><strong>Username:</strong> @User.Identity.Name</p>
+        <p><strong>Email:</strong> user@example.com</p>
+        <p><strong>Joined:</strong> 2023-08-15</p>
+        <p><strong>Status:</strong> Active</p>
+    </div>
+</div>
+ 
