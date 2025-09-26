@@ -41,9 +41,10 @@
 
                     <div class="form-group mb-3">
                         <label asp-for="ConfirmPassword" class="form-label"></label>
-                        <input asp-for="ConfirmPassword" type="password" name="Password" class="form-control" placeholder="Confirm password" required />
+                        <input asp-for="ConfirmPassword" type="password" name="ConfirmPassword" class="form-control" placeholder="Confirm password" required />
                         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                     </div>
+
 
                     <button type="submit" class="btn btn-primary">ثبت نام</button>
                 </form>
@@ -84,10 +85,11 @@
 
             const form = e.target;
             const data = {
-                UserName: form.UserName.value,
+                Username: form.UserName.value,   // 👈 match backend property
                 Email: form.Email.value,
                 Password: form.Password.value
             };
+
 
             try {
                 const res = await fetch("/Profile/Register", {

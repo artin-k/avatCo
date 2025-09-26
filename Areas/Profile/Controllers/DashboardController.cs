@@ -6,6 +6,9 @@ using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using BCrypt.Net;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 
 
 namespace avatCo.Areas.Profile.Controllers
@@ -21,11 +24,69 @@ namespace avatCo.Areas.Profile.Controllers
             _context = context;
         }
 
-
-        [HttpGet("")]   //  This makes /Profile map here
-        public IActionResult Profile()
+        [HttpGet("")]
+        public async Task<IActionResult> Profile()
         {
-            return View();
+            // Get user ID from claims
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+            {
+                return RedirectToAction("Login", "Dashboard");
+            }
+
+            // Load user with cart items (optional)
+            var user = await _context.Users
+                .Include(u => u.Orders)
+                .Include(u => u.CartItems)
+                .ThenInclude(c => c.Product)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
+        }
+
+        [HttpGet("GetProfileData")]
+        public async Task<IActionResult> GetProfileData()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null || !int.TryParse(userId, out int id)) return Unauthorized();
+
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) return NotFound();
+
+            var model = new User
+            {
+                FullName = user.FullName,
+                Email = user.Email,
+                Address = user.Address,
+                PhoneNumber = user.PhoneNumber,
+                ProfileImageUrl = user.ProfileImageUrl
+            };
+
+            return Json(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateProfile(User model)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = await _context.Users.FindAsync(int.Parse(userId));
+            if (user == null) return NotFound();
+
+            user.FullName = model.FullName;
+            user.Email = model.Email;
+            user.PhoneNumber = model.PhoneNumber;
+            user.Address = model.Address;
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
 
         [HttpGet("Register")]
@@ -37,16 +98,17 @@ namespace avatCo.Areas.Profile.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
         {
-/*            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }*/
+            if (string.IsNullOrWhiteSpace(model.Password))
+                return BadRequest(new { success = false, message = "Password required" });
+
+            // Hash before saving
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.Password.Trim());
 
             var user = new User
             {
-                UserName = model.Username,
+                UserName = model.Username,   // 👈 fixed naming
                 Email = model.Email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(model.Password) // ✅ hash before save
+                PasswordHash = hashedPassword
             };
 
             _context.Users.Add(user);
@@ -55,6 +117,7 @@ namespace avatCo.Areas.Profile.Controllers
             return Ok(new { success = true, redirectUrl = "/Profile" });
         }
 
+
         [HttpGet("Login")]
         public IActionResult Login()
         {
@@ -62,14 +125,53 @@ namespace avatCo.Areas.Profile.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
+        public async Task<IActionResult> Login([FromBody] LoginViewModel model)
         {
             if (!ModelState.IsValid)
-                return View(model);
+            {
+                Console.WriteLine("not valid");
+                //return BadRequest(new { success = false, message = "Invalid model state" });
+            }
 
-            ModelState.AddModelError("", "Invalid login attempt.");
-            return View(model);
+            string hash = "$2a$11$EXU1DdhCIHVWWUKQpG18KeIhtfCzeiPKRbC2xepkSgo/VyXi2Y.AO";
+            bool ok = BCrypt.Net.BCrypt.Verify("1", hash);
+            Console.WriteLine($"Manual verify: {ok}");
+
+
+            if (string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.Password))
+                return BadRequest(new { success = false, message = "Email and Password are required." });
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+            if (user == null)
+                return Unauthorized(new { success = false, message = "Invalid Email." });
+
+            Console.WriteLine($"[DEBUG] Password: {model.Password}, Hash: {user.PasswordHash}");
+
+            if (!BCrypt.Net.BCrypt.Verify(model.Password, user.PasswordHash))
+                return Unauthorized(new { success = false, message = "Invalid Password." });
+
+
+            // 🔹 Create claims
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName ?? user.Email),
+                new Claim(ClaimTypes.Email, user.Email)
+            };
+
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            // 🔹 Sign in user with cookie
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                principal,
+                new AuthenticationProperties { IsPersistent = true });
+
+            // 🔹 Return JSON response for your JS fetch
+            return Ok(new { success = true, redirectUrl = "/Profile" });
         }
+
 
         [HttpPost("Logout")]
         [ValidateAntiForgeryToken]

@@ -6,12 +6,107 @@
 
 <h3>profile</h3>
 
-<div class="card">
-    <div class="card-body">
-        <p><strong>Username:</strong> @User.Identity.Name</p>
-        <p><strong>Email:</strong> user@example.com</p>
-        <p><strong>Joined:</strong> 2023-08-15</p>
-        <p><strong>Status:</strong> Active</p>
-    </div>
+<div class="max-w-xl mx-auto p-6 bg-white shadow rounded">
+    <h2 class="text-2xl font-bold mb-4">Welcome, @Model.UserName</h2>
+
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+        Edit Profile
+    </button>
+
+    <ul class="space-y-2">
+        @if (!string.IsNullOrEmpty(Model.ProfileImageUrl))
+        {
+            <img src="@Model.ProfileImageUrl" alt="Profile Picture" class="rounded-circle" width="100" />
+        }        
+        <li><strong>Email:</strong> @Model.Email</li>
+        <li><strong>date sign up:</strong> @Model.RegisteredAt</li>
+        <li><strong>Gender:</strong> @Model.Gender</li>
+        <li><strong>Full Name</strong>@Model.FullName</li>
+        <li><strong>Address:</strong> @Model.Address</li>
+        <li><strong>Registered:</strong> @Model.RegisteredAt.ToShortDateString()</li>
+        <li><strong>Orders:</strong> @Model.Orders.Count</li>
+        <li><strong>Cart Items:</strong> @Model.CartItems.Count</li>
+
+    </ul>
 </div>
  
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.CartItems)
+        {
+            <tr>
+                <td>@item.Product.Title</td>
+                <td>@item.Quantity</td>
+                <td>@item.Product.Price.ToString("C")</td>
+                <td>@(item.Quantity * item.Product.Price).ToString("C")</td>
+                <td>
+                    <form method="post" action="/Cart/Remove">
+                        <input type="hidden" name="CartItemId" value="@item.Id" />
+                        <button class="btn btn-danger btn-sm">Remove</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+ <!--edit modal-->
+<div class="modal fade" id="editProfileModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="editProfileForm">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Profile</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" name="FullName" class="form-control mb-2" placeholder="Full Name" value="@Model.FullName" />
+                    <input type="email" name="Email" class="form-control mb-2" placeholder="Email" value="@Model.Email" />
+                    <input type="text" name="PhoneNumber" class="form-control mb-2" placeholder="Phone" value="@Model.PhoneNumber" />
+                    <input type="text" name="Address" class="form-control mb-2" placeholder="Address" value="@Model.Address" />
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#editProfileModal').on('show.bs.modal', function () {
+        $.get('/Profile/GetProfileData', function (data) {
+            $('#editProfileForm input[name="FullName"]').val(data.FullName);
+            $('#editProfileForm input[name="Email"]').val(data.Email);
+            $('#editProfileForm input[name="Address"]').val(data.Address);
+            $('#editProfileForm input[name="PhoneNumber"]').val(data.PhoneNumber);
+            $('#editProfileForm input[name="ProfileImageUrl"]').val(data.ProfileImageUrl);
+        });
+    });
+
+    $("#editProfileForm").submit(function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: "/Profile/UpdateProfile",
+            type: "POST",
+            data: $(this).serialize(),
+            success: function () {
+                location.reload(); // or update fields dynamically
+            },
+            error: function () {
+                alert("Something went wrong.");
+            }
+        });
+    });
+</script>

@@ -12,8 +12,8 @@ using avatCo.Models;
 namespace avatCo.Migrations
 {
     [DbContext(typeof(AvatDbContext))]
-    [Migration("20250925181741_InitAll")]
-    partial class InitAll
+    [Migration("20250926092141_InitiallAll")]
+    partial class InitiallAll
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -234,11 +234,31 @@ namespace avatCo.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DateOfBirth")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ProfileImageUrl")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -263,7 +283,7 @@ namespace avatCo.Migrations
                         .IsRequired();
 
                     b.HasOne("avatCo.Models.User", "User")
-                        .WithMany()
+                        .WithMany("CartItems")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -342,6 +362,8 @@ namespace avatCo.Migrations
 
             modelBuilder.Entity("avatCo.Models.User", b =>
                 {
+                    b.Navigation("CartItems");
+
                     b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618

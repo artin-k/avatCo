@@ -7,7 +7,7 @@
 <div class="container mt-5" style="max-width: 400px;">
     <h2 class="mb-4">Login</h2>
 
-    <form method="post">
+        <form method="post" id="LoginForm">
         @Html.AntiForgeryToken()
         <div class="mb-3">
             <label asp-for="Email" class="form-label">Email</label>
@@ -27,3 +27,37 @@
         <button type="submit" class="btn btn-primary w-100">Login</button>
     </form>
 </div>
+
+
+<script>
+    document.getElementById("LoginForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const form = e.target;
+        const data = {
+            Email: form.querySelector("[name=Email]").value,
+            Password: form.querySelector("[name=Password]").value
+        };
+
+        try {
+            const res = await fetch("/Profile/Login", {   // 👈 adjust to match controller route
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+
+            const result = await res.json();
+
+            if (!res.ok || !result.success) {
+                alert(result.message || "Invalid login attempt");
+                return;
+            }
+
+            // ✅ redirect on success
+            window.location.href = result.redirectUrl;
+        } catch (err) {
+            console.error(err);
+            alert("Something went wrong, please try again.");
+        }
+    });
+</script>

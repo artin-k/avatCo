@@ -28,6 +28,7 @@ namespace avatCo.Models
                 .WithMany(c => c.Products)
                 .HasForeignKey(p => p.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict); // or Cascade if you prefer
+
         }
 
     }
