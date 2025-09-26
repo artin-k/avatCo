@@ -14,7 +14,7 @@
     </button>
 
     <ul class="space-y-2">
-        @if (!string.IsNullOrEmpty(Model.ProfileImageUrl))
+        @if (!string.IsNullOrEmpty(@Model.ProfileImageUrl))
         {
             <img src="@Model.ProfileImageUrl" alt="Profile Picture" class="rounded-circle" width="100" />
         }        
@@ -65,16 +65,33 @@
 <div class="modal fade" id="editProfileModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="editProfileForm">
+            <form id="editProfileForm" enctype="multipart/form-data">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Profile</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
+                    @if (!string.IsNullOrEmpty(@Model.ProfileImageUrl))
+                    {
+                        <img src="@Model.ProfileImageUrl" alt="@Model.UserName" width="60" height="60" style="object-fit:cover;" />
+                    }
+
+                    <input type="file" name="ProfileImageFile" class="form-control mb-2" />
+
+                    <input type="text" name="UserName" class="form-control mb-2" placeholder="User name" value="@Model.UserName" />
                     <input type="text" name="FullName" class="form-control mb-2" placeholder="Full Name" value="@Model.FullName" />
-                    <input type="email" name="Email" class="form-control mb-2" placeholder="Email" value="@Model.Email" />
+                    <label for="gender">Gender:</label>
+                    <select name="Gender" id="Gender">
+                        <option value="Male">Select</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    
                     <input type="text" name="PhoneNumber" class="form-control mb-2" placeholder="Phone" value="@Model.PhoneNumber" />
-                    <input type="text" name="Address" class="form-control mb-2" placeholder="Address" value="@Model.Address" />
+                    <label for="dob">Date of Birth:</label>
+                    <input type="date" name="DateOfBirth" id="dob" value="@Model.DateOfBirth" />
+                    <textarea name="Address" class="form-control mb-2" placeholder="Address">@Model.Address</textarea>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success">Save</button>
@@ -84,29 +101,41 @@
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    // Load profile data into modal
     $('#editProfileModal').on('show.bs.modal', function () {
         $.get('/Profile/GetProfileData', function (data) {
-            $('#editProfileForm input[name="FullName"]').val(data.FullName);
-            $('#editProfileForm input[name="Email"]').val(data.Email);
-            $('#editProfileForm input[name="Address"]').val(data.Address);
-            $('#editProfileForm input[name="PhoneNumber"]').val(data.PhoneNumber);
-            $('#editProfileForm input[name="ProfileImageUrl"]').val(data.ProfileImageUrl);
+            $('#editProfileForm input[name="UserName"]').val(data.userName);
+            $('#editProfileForm input[name="FullName"]').val(data.fullName);
+            $('#editProfileForm input[name="PhoneNumber"]').val(data.phoneNumber);
+            $('#editProfileForm textarea[name="Address"]').val(data.address);
+            $('#editProfileForm select[name="Gender"]').val(data.gender);
+            $('#editProfileForm input[name="DateOfBirth"]').val(data.dateOfBirth?.split("T")[0]);
+            // ensures correct format (yyyy-MM-dd)
         });
     });
 
+    // Save changes
     $("#editProfileForm").submit(function (e) {
         e.preventDefault();
+
+        let formData = new FormData(this); // supports files!
+
         $.ajax({
             url: "/Profile/UpdateProfile",
             type: "POST",
-            data: $(this).serialize(),
+            data: formData,
+            processData: false, // don't convert to query string
+            contentType: false, // let browser set multipart/form-data
             success: function () {
-                location.reload(); // or update fields dynamically
+                location.reload();
             },
-            error: function () {
-                alert("Something went wrong.");
+            error: function (xhr) {
+                console.error("Error:", xhr.responseText);
+                alert("Something went wrong: " + xhr.responseText);
             }
         });
     });
 </script>
+

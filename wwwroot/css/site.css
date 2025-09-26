@@ -217,10 +217,19 @@ body {
     overflow: hidden;
 }
 
-.category-img {
+    .category-card img {
+        width: 100%; /* take full width of card */
+        height: 200px; /* 🔹 make all images same height */
+        object-fit: cover; /* 🔹 crop proportionally instead of stretching */
+        border-radius: 8px; /* optional, smooth edges */
+    }
+
+.card img {
     width: 100%;
-    height: auto;
+    height: 200px;
+    object-fit: cover;
 }
+
 
 .scroll-btn {
     background-color: #f8f9fa;

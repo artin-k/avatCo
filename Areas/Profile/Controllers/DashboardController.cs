@@ -59,35 +59,55 @@ namespace avatCo.Areas.Profile.Controllers
             var user = await _context.Users.FindAsync(id);
             if (user == null) return NotFound();
 
-            var model = new User
+            var model = new EditProfileViewModel
             {
+                UserName = user.UserName,
                 FullName = user.FullName,
                 Email = user.Email,
                 Address = user.Address,
                 PhoneNumber = user.PhoneNumber,
-                ProfileImageUrl = user.ProfileImageUrl
+                ProfileImageUrl = user.ProfileImageUrl,
+                Gender = user.Gender,
+                DateOfBirth = user.DateOfBirth
             };
 
             return Json(model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> UpdateProfile(User model)
+        [HttpPost("UpdateProfile")]
+        public async Task<IActionResult> UpdateProfile([FromForm] EditProfileViewModel model, IFormFile? ProfileImageFile)
         {
+            Console.WriteLine("Edit profile hit");
+
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
             var user = await _context.Users.FindAsync(int.Parse(userId));
             if (user == null) return NotFound();
 
+            user.UserName = model.UserName;
             user.FullName = model.FullName;
-            user.Email = model.Email;
             user.PhoneNumber = model.PhoneNumber;
             user.Address = model.Address;
+            user.Gender = model.Gender;
+            user.DateOfBirth = model.DateOfBirth;
+
+            if (ProfileImageFile != null && ProfileImageFile.Length > 0)
+            {
+                var filePath = Path.Combine("wwwroot/uploads/Profiles", ProfileImageFile.FileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await ProfileImageFile.CopyToAsync(stream);
+                }
+                user.ProfileImageUrl = "/uploads/Profiles/" + ProfileImageFile.FileName;
+            }
 
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok(new { success = true });
         }
+
 
         [HttpGet("Register")]
         public IActionResult Register()

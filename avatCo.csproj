@@ -38,6 +38,7 @@
     <Folder Include="Areas\Profile\Data\" />
     <Folder Include="Areas\Profile\Models\" />
     <Folder Include="wwwroot\uploads\Categories\" />
+    <Folder Include="wwwroot\uploads\Profiles\" />
   </ItemGroup>
 
 </Project>
