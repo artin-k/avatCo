@@ -1,0 +1,231 @@
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-bg: #f8f9fa;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .content-wrapper {
+            flex: 1;
+        }
+        
+        .header {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-brand {
+            font-size: 1.8rem;
+            color: #fff !important;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            transition: color 0.3s;
+            margin: 0 8px;
+        }
+        
+        .nav-link:hover {
+            color: var(--secondary-color) !important;
+        }
+        
+        .nav-icon {
+            color: #fff;
+            font-size: 1.2rem;
+            transition: color 0.3s;
+            padding: 8px;
+        }
+        
+        .nav-icon:hover {
+            color: var(--secondary-color);
+        }
+        
+        .search-section {
+            background: linear-gradient(135deg, var(--primary-color), #1a2530);
+            padding: 40px 0;
+            margin-bottom: 30px;
+            color: white;
+        }
+        
+        .search-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .search-title {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .search-subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            opacity: 0.9;
+        }
+        
+        .search-box {
+            display: flex;
+            border-radius: 50px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .search-input {
+            flex: 1;
+            border: none;
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            outline: none;
+        }
+        
+        .search-button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .search-button:hover {
+            background-color: #c0392b;
+        }
+        
+        .category-filters {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .category-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .category-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+        
+        .site-footer {
+            background-color: var(--primary-color);
+            margin-top: 50px;
+        }
+        
+        .footer-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-link:hover {
+            color: white;
+        }
+        
+        .content-highlights {
+            padding: 40px 0;
+        }
+        
+        .highlight-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+            height: 100%;
+        }
+        
+        .highlight-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .highlight-icon {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .search-title {
+                font-size: 1.8rem;
+            }
+            
+            .search-box {
+                flex-direction: column;
+                border-radius: 10px;
+            }
+            
+            .search-input, .search-button {
+                border-radius: 0;
+                width: 100%;
+            }
+            
+            .search-button {
+                padding: 12px;
+            }
+        }
+        
+        /* Add to your existing CSS */
+.search-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    z-index: 1000;
+    display: none;
+}
+
+.suggestion-item {
+    padding: 12px 20px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s;
+}
+
+.suggestion-item:hover {
+    background-color: #f8f9fa;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.product-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.product-info {
+    padding: 15px;
+}
