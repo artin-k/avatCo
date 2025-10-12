@@ -55,22 +55,24 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h4>پیشنهادات ویژه</h4>
     </div>
-    <div class="scroll-container">
+    <div class="offers-grid">
         <button class="scroll-btn prev-btn">&lt;</button>
-        <div class="row g-3 flex-nowrap overflow-auto scrollable-row">
-            @foreach (var so in Model.Products.Where(p => p.IsSpecialOffer))
-            {
-                <div class="col-6 col-md-3 flex-shrink-0">
-                    <div class="card text-center h-100 category-card">
-                        <img src="@so.ImageUrl" class="category-img" alt="@so.Title" />
-                        <div class="card-body">
-                            <h6>@so.Title</h6>
-                            <a href="@Url.Action("Details", "Products", new { id = so.Id })" class="stretched-link"></a>
-                        </div>
-                    </div>
+          <div class="row g-4 justify-content-center">
+              @foreach (var so in Model.Products.Where(p => p.IsSpecialOffer))
+              {
+                <div class="offer-card">
+                  <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                      <div class="card text-center h-100 offer-card">
+                          <img src="@so.ImageUrl" class="offer-img" alt="@so.Title" />
+                          <div class="card-body">
+                              <h6>@so.Title</h6>
+                              <a href="@Url.Action("Details", "Products", new { id = so.Id })" class="stretched-link"></a>
+                          </div>
+                      </div>
+                  </div>
                 </div>
-            }
-        </div>
+              }
+          </div>
         <button class="scroll-btn next-btn">&gt;</button>
     </div>
 </section>
@@ -88,17 +90,20 @@
     </button>
 
     <div class="categories-scroll-container">
-      <div class="categories-row">
-        @foreach (var cat in Model.Categories)
-        {
-          <a href="@Url.Action("Index", "Shop", new { category = cat.Name })" class="category-item">
-            <div class="category-icon">
-              <img src="@cat.ImageUrl" alt="@cat.Name" onerror="this.src='https://via.placeholder.com/60x60?text=📁'">
-            </div>
-            <span class="category-name">@cat.Name</span>
-          </a>
-        }
+      <div class="row g-4 justify-content-center text-center">
+          @foreach (var cat in Model.Categories)
+          {
+              <div class="col-6 col-md-4 col-lg-3">
+                  <div class="category-item">
+                      <div class="category-icon">
+                          <img src="@cat.ImageUrl" alt="@cat.Name" />
+                      </div>
+                      <span class="category-name">@cat.Name</span>
+                  </div>
+              </div>
+          }
       </div>
+
     </div>
 
     <button class="scroll-btn next-btn shadow">
@@ -108,8 +113,8 @@
 </section>
 
 <!-- Promos + Services Section -->
-<section class="home-promo" dir="rtl">
-  <div class="container">
+<section class="promo-section" dir="rtl">
+  <div class="promo-container">
     <!-- Promos Row -->
     <div class="promo-grid">
       <div class="promo-card">
@@ -122,28 +127,31 @@
         <p class="promo-text mt-2">تا آخر این ماه هزینه پست با ما</p>
       </div>
     </div>
+  </section>
 
     <!-- Services Row -->
-    <div class="services-wrapper mt-4">
-      <div class="services-grid">
-        <article class="service-card">
-          <img src="@Url.Content("~/uploads/Home/girl_Chemist.png")" alt="نازل ترین قیمت">
-          <div class="overlay"><h3>به نازل‌ترین قیمت</h3></div>
-        </article>
+  <section>
+      <div class="services-wrapper mt-4">
+        <div class="services-grid">
+          <article class="service-card">
+            <img src="@Url.Content("~/uploads/Home/girl_Chemist.png")" alt="نازل ترین قیمت">
+            <div class="overlay"><h3>به نازل‌ترین قیمت</h3></div>
+          </article>
 
-        <article class="service-card">
-          <img src="@Url.Content("~/uploads/Home/male_chemist2.jpg")" alt="خدمات متناسب">
-          <div class="overlay"><h3>خدمات متناسب با نیاز شما</h3></div>
-        </article>
+          <article class="service-card">
+            <img src="@Url.Content("~/uploads/Home/male_chemist2.jpg")" alt="خدمات متناسب">
+            <div class="overlay"><h3>خدمات متناسب با نیاز شما</h3></div>
+          </article>
 
-        <article class="service-card">
-          <img src="@Url.Content("~/uploads/Home/male_chemist.jpg")" alt="تخصص آزمایشگاهی">
-          <div class="overlay"><h3>تخصصی‌ترین حوزه‌های آزمایشگاهی</h3></div>
-        </article>
+          <article class="service-card">
+            <img src="@Url.Content("~/uploads/Home/male_chemist.jpg")" alt="تخصص آزمایشگاهی">
+            <div class="overlay"><h3>تخصصی‌ترین حوزه‌های آزمایشگاهی</h3></div>
+          </article>
+        </div>
       </div>
-    </div>
-  </div>
-</section>
+  </section>
+
+
 
 <!-- Consultation Section -->
 <section class="consult-section bg-light py-5 mt-5" dir="rtl">

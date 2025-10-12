@@ -1,10 +1,17 @@
 ﻿html, body {
   height: 100%;
   margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* optional: prevents horizontal scrollbars */
+}
+
+.container {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 body {
-  display: flex;
+  /* display: flex; */
   flex-direction: column;
   min-height: 100vh;
 }
@@ -30,48 +37,65 @@ body {
 }
 
 /* === SPECIAL OFFERS === */
-.special-offers .scroll-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.special-offers .scrollable-row {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-}
-
-.special-offers .card {
-  border: none;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  width: 220px;
-  margin-right: 15px;
-  flex-shrink: 0;
-}
-
-.special-offers .category-img {
+.special-offers {
   width: 100%;
-  height: 180px;
+  margin: 60px auto;
+}
+
+.special-offers .offers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  justify-items: center;
+}
+
+.offer-card {
+  width: 100%;
+  max-width: 280px;
+  border: none;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.offer-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+}
+
+.offer-img {
+  border-radius: 10px;
+  width: 100%;
+  height: 220px;
   object-fit: cover;
-  border-radius: 12px 12px 0 0;
 }
 
 .special-offers .card-body {
   text-align: center;
+  padding: 12px;
 }
 
-.scrollable-row {
-  gap: 100px !important;        /* adds space between cards */
-  margin: 0 !important;        /* removes Bootstrap’s negative margin */
-  padding: 10px 15px;          /* optional padding for nicer spacing */
+/* === Responsive Tweaks === */
+@media (max-width: 992px) {
+  .offer-img {
+    height: 180px;
+  }
 }
-.scrollable-row > .col-6,
-.scrollable-row > .col-md-3 {
-  flex: 0 0 auto;              /* keeps them in one line, no overlap */
+
+@media (max-width: 768px) {
+  .offer-img {
+    height: 160px;
+  }
 }
+
+@media (max-width: 576px) {
+  .offer-img {
+    height: 140px;
+  }
+}
+
 
 
 /* === CATEGORY SECTION === */
@@ -83,7 +107,7 @@ body {
 }
 
 .categories-scroll-container {
-  overflow-x: auto;
+  overflow-x: hidden;
   scroll-behavior: smooth;
   width: 100%;
 }
@@ -96,20 +120,16 @@ body {
 }
 
 .category-item {
-  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: inherit;
-  text-decoration: none;
 }
 
 .category-icon img {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
+  width: 120px;
+  height: 120px;
   object-fit: cover;
-  display: block;
+  border-radius: 50%;
   margin-bottom: 10px;
   transition: transform 0.3s ease;
 }
@@ -117,6 +137,14 @@ body {
 .category-icon img:hover {
   transform: scale(1.05);
 }
+
+@media (max-width: 576px) {
+  .category-icon img {
+    width: 80px;
+    height: 80px;
+  }
+}
+
 
 .category-name {
   font-size: 0.9rem;
@@ -156,6 +184,11 @@ section {
 }
 
 /* Promos */
+.promo{
+  display: flex;
+  justify-content: center;
+}
+
 .promo-grid {
   display: flex;
   gap: 20px;
@@ -168,6 +201,7 @@ section {
   padding: 1rem;
   flex: 0 0 auto;
   width: 280px;
+  justify-content: center;
   box-shadow: var(--shadow);
   text-align: center;
   transition: transform 0.3s ease;
@@ -185,49 +219,125 @@ section {
   margin-top: 0.5rem;
   font-weight: 600;
 }
+.promo-section {
+  display: flex;
+  justify-content: center;  /* horizontal */
+  align-items: center;      /* vertical */
+  min-height: 400px;        /* or whatever height you want */
+  background-color: #f9f9f9; /* optional */
+}
+.promo-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem; /* gives margin between them */
+}
 
-/* Services */
+/* === SERVICES SECTION === */
 .services-wrapper {
-  background: var(--primary-pink);
-  padding: 1.5rem;
+  background-color: #f87171;
   border-radius: 12px;
-  margin-top: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
 }
+
 .services-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 25px;
+  flex-wrap: wrap;
 }
+
 .service-card {
+  flex: 1 1 30%;
+  max-width: 360px;
+  min-width: 260px;
   position: relative;
   overflow: hidden;
-  border-radius: 12px;
-  height: 180px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
+.service-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
 .service-card img {
   width: 100%;
-  height: 100%;
+  height: 240px;
   object-fit: cover;
-  transition: transform 0.35s ease;
+  display: block;
+  border-radius: 16px;
 }
-.service-card:hover img {
-  transform: scale(1.05);
-}
+
+/* Overlay */
 .overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-weight: 700;
-  font-size: 1rem;
+  background: rgba(0,0,0,0.45);
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 16px;
 }
+
+.service-card:hover .overlay {
+  opacity: 1;
+}
+
+.overlay h3 {
+  font-size: 1.1rem;
+  text-align: center;
+  margin: 0;
+  padding: 0 10px;
+}
+
+/* 🔽 Responsive tweaks */
+@media (max-width: 992px) {
+  .service-card {
+    flex: 1 1 30%;
+    max-width: 300px;
+  }
+  .service-card img {
+    height: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .services-grid {
+    flex-wrap: wrap;
+  }
+  .service-card {
+    flex: 1 1 45%;
+    max-width: 45%;
+  }
+  .service-card img {
+    height: 180px;
+  }
+}
+
+@media (max-width: 576px) {
+  .service-card {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+  .service-card img {
+    height: 160px;
+  }
+}
+
 
 /* Buttons Fix */
 .btn {
   transition: all 0.3s ease;
+  color: #374151;
 }
 .btn:hover {
   transform: translateY(-2px);

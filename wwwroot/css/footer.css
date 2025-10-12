@@ -2,10 +2,12 @@
 
 footer {
   margin-top: auto;
+  
 }
 
 .site-footer {
-    background-color: var(--primary-dark);
+    /* background-color: var(--primary-dark); */
+    background-color: #374151;
     color: var(--text-white);
     padding: 3rem 0 1rem;
     margin-top: auto;
