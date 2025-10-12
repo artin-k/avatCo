@@ -23,12 +23,16 @@
             </form>
             
             <div class="category-filters">
-                <!-- Make category filters work with your backend -->
-                <button type="button" class="category-btn" data-category="شیشه آلات">شیشه آلات</button>
-                <button type="button" class="category-btn" data-category="مواد شیمیایی">مواد شیمیایی</button>
-                <button type="button" class="category-btn" data-category="تجهیزات پزشکی">تجهیزات پزشکی</button>
-                <button type="button" class="category-btn" data-category="لوازم مصرفی">لوازم مصرفی</button>
-                <button type="button" class="category-btn" data-category="دستگاه‌های آزمایشگاهی">دستگاه‌های آزمایشگاهی</button>
+                @foreach (var c in Model.Categories)
+                {
+
+                    <button type="button"
+                        href="@Url.Action("Index", "Shop", new { category = c.Name })" 
+                        class="category-btn @(Model.CategoryName == c.Name ? "active" : "")"
+                        data-category="@c.Name">
+                        @c.Name
+                    </button> 
+                } 
             </div>
         </div>
     </div>

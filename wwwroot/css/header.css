@@ -1,0 +1,18 @@
+/* ===== HEADER & NAVIGATION ===== */
+.navbar-custom {
+    background-color: var(--primary-dark);
+    box-shadow: var(--shadow-md);
+}
+
+.navbar-brand .site-name,
+.navbar-custom .nav-link,
+.nav-icon {
+    color: var(--text-white) !important;
+    transition: color 0.3s ease;
+}
+
+.navbar-custom .nav-link:hover,
+.navbar-custom .site-name:hover,
+.nav-icon:hover {
+    color: var(--primary-pink) !important;
+}

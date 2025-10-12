@@ -75,124 +75,163 @@
     </div>
 </section>
 
+<!-- Categories Section -->
+<section class="categories container my-5" dir="rtl">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold">دسته‌بندی‌ها</h4>
+    <a href="/Categories" class="btn btn-outline-primary btn-sm">مشاهده همه</a>
+  </div>
 
-<!--Categories-->
-<section class="categories container my-5">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4>دسته بندی ها</h4>
-        <a href="/Products" class="btn btn-outline-dark">همه</a>
+  <div class="position-relative categories-wrapper">
+    <button class="scroll-btn prev-btn shadow">
+      <i class="bi bi-chevron-right"></i>
+    </button>
+
+    <div class="categories-scroll-container">
+      <div class="categories-row">
+        @foreach (var cat in Model.Categories)
+        {
+          <a href="@Url.Action("Index", "Shop", new { category = cat.Name })" class="category-item">
+            <div class="category-icon">
+              <img src="@cat.ImageUrl" alt="@cat.Name" onerror="this.src='https://via.placeholder.com/60x60?text=📁'">
+            </div>
+            <span class="category-name">@cat.Name</span>
+          </a>
+        }
+      </div>
     </div>
 
-    <h2 class="mt-5">Explore Categories</h2>
-    <div class="scroll-container">
-        <button class="scroll-btn prev-btn">&lt;</button>
-        <div class="row g-3 flex-nowrap overflow-auto scrollable-row">
-            @foreach (var cat in Model.Categories)
-            {
-                <div class="col-6 col-md-3 flex-shrink-0">
-                    <div class="card text-center h-100 category-card">
-                        <img src="@cat.ImageUrl" class="category-img" alt="@cat.Name" />
-                        <div class="card-body">
-                            <h6>@cat.Name</h6>
-@*                             <h6>@cat.Description</h6> *@
-                            <a href="@Url.Action("Details", "Categories", new { id = cat.Id })" class="stretched-link"></a>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-        <button class="scroll-btn next-btn">&gt;</button>
-    </div>
-
-
-
-    <script>
-        const scrollContainer = document.querySelector('.scrollable-row');
-        const prevBtn = document.querySelector('.prev-btn');
-        const nextBtn = document.querySelector('.next-btn');
-
-        prevBtn.addEventListener('click', () => {
-            scrollContainer.scrollLeft -= 220; // Adjust based on card width + margin
-        });
-
-        nextBtn.addEventListener('click', () => {
-            scrollContainer.scrollLeft += 220; // Adjust based on card width + margin
-        });
-    </script>
-
+    <button class="scroll-btn next-btn shadow">
+      <i class="bi bi-chevron-left"></i>
+    </button>
+  </div>
 </section>
 
-@* Promos + Services section (RTL) *@
+<!-- Promos + Services Section -->
 <section class="home-promo" dir="rtl">
-    <div class="container">
+  <div class="container">
+    <!-- Promos Row -->
+    <div class="promo-grid">
+      <div class="promo-card">
+        <img src="@Url.Content("~/uploads/Home/50_parcent.jpg")" alt="۵۰٪ تخفیف">
+        <p class="promo-text mt-2">۵۰ درصد تخفیف فقط تا آخر امروز</p>
+      </div>
 
-        <div class="promos-container">
-            <div class="promo-card">
-                <div class="img-wrap">
-                    <img src="@Url.Content("~/uploads/Home/50_parcent.jpg")" alt="۵۰٪ تخفیف" />
-                </div>
-                <p class="promo-caption">۵۰ درصد تخفیف فقط تا آخر امروز</p>
-            </div>
-
-            <div class="promo-card">
-                <div class="img-wrap">
-                    <img src="@Url.Content("~/uploads/Home/Postman.jpg")" alt="ارسال رایگان" />
-                </div>
-                <p class="promo-caption">تا آخر این ماه هزینه پست با ما</p>
-            </div>
-        </div>
-
-
-        <!-- Row 2: Services (pink band) -->
-        <div class="services-wrapper">
-            <div class="services-grid">
-                <article class="service-card">
-                    <img src="@Url.Content("~/uploads/Home/girl_Chemist.png")" alt="نازل ترین قیمت" />
-                    <div class="overlay"><h3>به نازل ترین قیمت</h3></div>
-                </article>
-
-                <article class="service-card">
-                    <img src="@Url.Content("~/uploads/Home/male_chemist2.jpg")" alt="خدمات متناسب" />
-                    <div class="overlay"><h3>خدمات متناسب با نیاز شما</h3></div>
-                </article>
-
-                <article class="service-card">
-                    <img src="@Url.Content("~/uploads/Home/male_chemist.jpg")" alt="تخصص آزمایشگاهی" />
-                    <div class="overlay"><h3>تخصصی‌ترین حوزه‌های آزمایشگاهی</h3></div>
-                </article>
-            </div>
-        </div>
-
+      <div class="promo-card">
+        <img src="@Url.Content("~/uploads/Home/Postman.jpg")" alt="ارسال رایگان">
+        <p class="promo-text mt-2">تا آخر این ماه هزینه پست با ما</p>
+      </div>
     </div>
+
+    <!-- Services Row -->
+    <div class="services-wrapper mt-4">
+      <div class="services-grid">
+        <article class="service-card">
+          <img src="@Url.Content("~/uploads/Home/girl_Chemist.png")" alt="نازل ترین قیمت">
+          <div class="overlay"><h3>به نازل‌ترین قیمت</h3></div>
+        </article>
+
+        <article class="service-card">
+          <img src="@Url.Content("~/uploads/Home/male_chemist2.jpg")" alt="خدمات متناسب">
+          <div class="overlay"><h3>خدمات متناسب با نیاز شما</h3></div>
+        </article>
+
+        <article class="service-card">
+          <img src="@Url.Content("~/uploads/Home/male_chemist.jpg")" alt="تخصص آزمایشگاهی">
+          <div class="overlay"><h3>تخصصی‌ترین حوزه‌های آزمایشگاهی</h3></div>
+        </article>
+      </div>
+    </div>
+  </div>
 </section>
 
-
-<section class="bg-light py-5 mt-5" dir="rtl">
-    <div class="container text-center">
-        <h2 class="h2 fw-bold text-dark mb-3">مشاوره رایگان با متخصصان ما</h2>
-        <p class="fs-5 text-muted mb-4">
-            اگر سوالی دارید یا نیاز به راهنمایی دارید، تیم پشتیبانی ما آماده پاسخگویی و مشاوره رایگان به شماست.
-        </p>
-
-        <div class="d-flex justify-content-center flex-wrap gap-3 mb-4">
-            <a href="tel:+982612345678"
-               class="btn btn-danger d-flex align-items-center gap-2 rounded-pill shadow px-4 py-2">
-                <i class="bi bi-telephone-fill"></i> تماس تلفنی
-            </a>
-
-            <a href="https://wa.me/989123456789"
-               class="btn btn-success d-flex align-items-center gap-2 rounded-pill shadow px-4 py-2">
-                <i class="bi bi-whatsapp"></i> واتساپ
-            </a>
-
-            <a href="/Contact/RequestConsultation"
-               class="btn btn-indigo d-flex align-items-center gap-2 rounded-pill shadow px-4 py-2"
-               style="background-color:#4f46e5; border:none; color:#ffffff;">
-                <i class="bi bi-person-lines-fill"></i> درخواست مشاوره
-            </a>
-        </div>
+<!-- Consultation Section -->
+<section class="consult-section bg-light py-5 mt-5" dir="rtl">
+  <div class="container text-center">
+    <h2 class="fw-bold mb-3">مشاوره رایگان با متخصصان ما</h2>
+    <p class="text-muted mb-4 fs-5">
+      اگر سوالی دارید یا نیاز به راهنمایی دارید، تیم پشتیبانی ما آماده پاسخگویی است.
+    </p>
+    <div class="d-flex justify-content-center flex-wrap gap-3">
+      <a href="tel:+982612345678" class="btn btn-danger d-flex align-items-center gap-2 rounded-pill shadow px-4 py-2">
+        <i class="bi bi-telephone-fill"></i> تماس تلفنی
+      </a>
+      <a href="https://wa.me/989123456789" class="btn btn-success d-flex align-items-center gap-2 rounded-pill shadow px-4 py-2">
+        <i class="bi bi-whatsapp"></i> واتساپ
+      </a>
+      <a href="/Contact/RequestConsultation" class="btn btn-primary d-flex align-items-center gap-2 rounded-pill shadow px-4 py-2">
+        <i class="bi bi-person-lines-fill"></i> درخواست مشاوره
+      </a>
     </div>
+  </div>
 </section>
 
 
 
+
+<script>
+// Initialize scrolling for both sections
+document.addEventListener('DOMContentLoaded', function() {
+    initializeScrolling('.special-offers .scrollable-row', '.special-offers .prev-btn', '.special-offers .next-btn');
+    initializeScrolling('.categories-scroll-container', '.categories .prev-btn', '.categories .next-btn');
+});
+
+function initializeScrolling(containerSelector, prevBtnSelector, nextBtnSelector) {
+    const scrollContainer = document.querySelector(containerSelector);
+    const prevBtn = document.querySelector(prevBtnSelector);
+    const nextBtn = document.querySelector(nextBtnSelector);
+    
+    if (!scrollContainer || !prevBtn || !nextBtn) return;
+    
+    const scrollAmount = 300;
+    
+    // Scroll functions
+    prevBtn.addEventListener('click', () => {
+        scrollContainer.scrollBy({
+            left: -scrollAmount,
+            behavior: 'smooth'
+        });
+    });
+    
+    nextBtn.addEventListener('click', () => {
+        scrollContainer.scrollBy({
+            left: scrollAmount,
+            behavior: 'smooth'
+        });
+    });
+    
+    // Update button visibility
+    function updateButtons() {
+        const canScrollLeft = scrollContainer.scrollLeft > 0;
+        const canScrollRight = 
+            scrollContainer.scrollLeft < 
+            (scrollContainer.scrollWidth - scrollContainer.clientWidth - 10);
+            
+        prevBtn.style.opacity = canScrollLeft ? '1' : '0.3';
+        nextBtn.style.opacity = canScrollRight ? '1' : '0.3';
+        prevBtn.style.pointerEvents = canScrollLeft ? 'all' : 'none';
+        nextBtn.style.pointerEvents = canScrollRight ? 'all' : 'none';
+    }
+    
+    // Initial check and event listeners
+    updateButtons();
+    scrollContainer.addEventListener('scroll', updateButtons);
+    window.addEventListener('resize', updateButtons);
+    
+    // Touch/swipe support
+    let startX;
+    let scrollLeft;
+    
+    scrollContainer.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].pageX - scrollContainer.offsetLeft;
+        scrollLeft = scrollContainer.scrollLeft;
+    });
+    
+    scrollContainer.addEventListener('touchmove', (e) => {
+        if (!startX) return;
+        const x = e.touches[0].pageX - scrollContainer.offsetLeft;
+        const walk = (x - startX) * 2;
+        scrollContainer.scrollLeft = scrollLeft - walk;
+    });
+}
+</script>
