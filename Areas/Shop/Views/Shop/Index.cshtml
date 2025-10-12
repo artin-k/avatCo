@@ -3,62 +3,90 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!-- Shop Header with Search --> 
-<section class="bg-light py-5"> 
-    <div class="container text-center">
-    <h2 class="fw-bold mb-3">@Model.Title</h2> 
-    <p class="text-muted mb-4">@Model.Description</p>
-    <!-- Right: Icons --> 
-        <div class="d-flex align-items-center mt-3 mt-lg-0">
-            <!-- AJAX Search -->
-            <div class="position-relative me-3">
-                <input type="text" id="searchBox" class="form-control form-control-sm" placeholder="جستجو..." autocomplete="off" /> 
-                <!-- Search Results Dropdown -->
+<!-- Add CSS reference correctly -->
+<link rel="stylesheet" href="~/css/shopHead.css" />
 
-                <div id="searchResults" class="list-group position-absolute w-100 shadow d-none" style="z-index: 2000;">
-
+<!-- Search Section -->
+<section class="search-section">
+    <div class="container">
+        <div class="search-container text-center">
+            <!-- Make search form work with your backend -->
+            <form id="searchForm" method="get" action="@Url.Action("Index", "Shop")">
+                <div class="search-box">
+                    <input type="text" 
+                           class="search-input" 
+                           name="q"
+                           @* value="@Model.Query" *@
+                           placeholder="نام محصول، دسته بندی یا برند مورد نظر را جستجو کنید...">
+                    <button type="submit" class="search-button">جستجو</button>
                 </div>
-                </div> 
-                <div class="input-group">
-                    <input type="text" id="searchBox" class="form-control form-control-sm" placeholder="جستجو..." autocomplete="off" /> 
-                    <button id="searchBtn" class="btn btn-outline-light"><i class="bi bi-search"></i></button> 
-                </div> 
-                <div id="searchResults" class="list-group position-absolute w-100 shadow d-none" style="z-index: 2000;">
+            </form>
+            
+            <div class="category-filters">
+                @foreach (var c in Model.Categories)
+                {
 
-                </div>
-                <a href="#" class="nav-icon me-3">
-                    <i class="bi bi-cart"></i></a> 
-                <a href="#" class="nav-icon">
-                    <i class="bi bi-person"></i></a> 
-         </div>
+                    <button type="button"
+                        href="@Url.Action("Index", "Shop", new { category = c.Name })" 
+                        class="category-btn @(Model.CategoryName == c.Name ? "active" : "")"
+                        data-category="@c.Name">
+                        @c.Name
+                    </button> 
+                } 
+            </div>
+        </div>
     </div>
-</section> 
-<!-- Categories Section (buttons only) --> 
+</section>
+
+<!-- Categories Section -->
 <section class="container my-5"> 
-        <div class="d-flex justify-content-between align-items-center mb-3"> 
-            <h4 class="fw-bold">دسته‌بندی‌ها</h4>
-             <a href="/Products" class="btn btn-outline-dark">مشاهده همه</a> 
-        </div> 
+    <div class="d-flex justify-content-between align-items-center mb-3"> 
+        <h4 class="fw-bold">دسته‌بندی‌ها</h4>
+        <a href="/Shop" class="btn btn-outline-dark">مشاهده همه</a> 
+    </div> 
     <div class="d-flex flex-wrap gap-2">
         @foreach (var c in Model.Categories)
         {
-            <a href="@Url.Action("Index", "Products", new { categoryId = c.Id })" class="btn btn-outline-secondary"> @c.Name </a>
+            <a href="@Url.Action("Index", "Shop", new { category = c.Name })" 
+               class="btn btn-outline-secondary @(Model.CategoryName == c.Name ? "active" : "")">
+                @c.Name 
+            </a>
         } 
     </div> 
 </section>
-
 
 <!-- Products Section -->
 <section class="container my-5">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h4 class="fw-bold">محصولات</h4>
-        <a href="/Products" class="btn btn-outline-dark">مشاهده همه</a>
+        <a href="/Shop" class="btn btn-outline-dark">مشاهده همه</a>
     </div>
 
-    <div class="row g-4">
+    <!-- Search Results Info -->
+    @* @if (!string.IsNullOrEmpty(Model.Query))
+    {
+        <div class="alert alert-info">
+            <strong>نتایج جستجو برای:</strong> "@Model.Query"
+            @if (!string.IsNullOrEmpty(Model.Category))
+            {
+                <span> در دسته <strong>@Model.Category</strong></span>
+            }
+            <span> - @Model.TotalCount محصول یافت شد</span>
+            <a href="@Url.Action("Index", "Shop")" class="btn btn-sm btn-outline-danger me-2">حذف فیلترها</a>
+        </div>
+    } *@
+
+    <div class="row g-4" id="productsGrid">
         @if (!Model.Products.Any())
         {
-            <p class="text-danger text-center mt-4">محصولی یافت نشد.</p>
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <i class="bi bi-search display-1 text-muted"></i>
+                    <h4 class="text-muted mt-3">محصولی یافت نشد</h4>
+                    <p class="text-muted">لطفاً عبارت جستجو یا فیلترها را تغییر دهید</p>
+                    <a href="@Url.Action("Index", "Shop")" class="btn btn-primary">مشاهده همه محصولات</a>
+                </div>
+            </div>
         }
         @foreach (var p in Model.Products)
         {
@@ -66,26 +94,43 @@
                 <div class="card h-100 product-card shadow-sm border-0">
                     <img src="@p.ImageUrl" class="card-img-top" alt="@p.Title"
                          style="height:220px; object-fit:cover; border-top-left-radius:1rem; border-top-right-radius:1rem;" />
-                    <div class="card-body text-center">
+                    <div class="card-body text-center d-flex flex-column">
                         <h6 class="fw-semibold">@p.Title</h6>
-                        <p class="small text-muted mb-1">@p.Price.ToString("N0") تومان</p>
-                        <button class="btn btn-sm btn-dark rounded-pill mt-2"
-                                type="button"
-                                onclick="openDetailProductModal(@p.Id)">
-                            مشاهده جزئیات
-                        </button>
-
-
+                        <p class="small text-muted mb-1">@p.Brand</p>
+                        <p class="text-success fw-bold mb-2">@p.Price.ToString("N0") تومان</p>
+                        <div class="mt-auto">
+                            <button class="btn btn-sm btn-dark rounded-pill w-100"
+                                    type="button"
+                                    onclick="openDetailProductModal(@p.Id)">
+                                مشاهده جزئیات
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         }
     </div>
-</section>
 
+    @* <!-- Pagination -->
+    @if (Model.TotalPages > 1)
+    {
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                        <a class="page-link" 
+                           href="@Url.Action("Index", "Shop", new { q = Model.Query, category = Model.Category, page = i })">
+                            @i
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+</section> *@
 
 <!-- Product Details Modal -->
-<!-- Product Details Modal (static shell, body will be filled by JS) -->
 <div class="modal fade" id="productDetailsModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
@@ -124,9 +169,6 @@
                     <li class="nav-item" role="presentation">
                         <a class="nav-link" id="tab-opinions" data-bs-toggle="tab" href="#tab-content-opinions" role="tab">نظرات</a>
                     </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link" id="tab-qa" data-bs-toggle="tab" href="#tab-content-qa" role="tab">سوالات</a>
-                    </li>
                 </ul>
 
                 <div class="tab-content mt-3">
@@ -136,13 +178,7 @@
 
                     <div class="tab-pane fade" id="tab-content-opinions" role="tabpanel">
                         <div id="pd-opinions-list" class="mb-3"></div>
-
-                        <!-- Open Add Opinion modal -->
                         <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addOpinionModal">افزودن نظر</button>
-                    </div>
-
-                    <div class="tab-pane fade" id="tab-content-qa" role="tabpanel">
-                        <p class="text-muted">فعلاً پرسشی ثبت نشده.</p>
                     </div>
                 </div>
             </div>
@@ -155,11 +191,11 @@
     </div>
 </div>
 
-<!-- Add Opinion Modal (separate modal) -->
+<!-- Add Opinion Modal -->
 <div class="modal fade" id="addOpinionModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="addOpinionForm" method="post" action="@Url.Action("AddOpinion", "Products")">
+            <form id="addOpinionForm" method="post" action="@Url.Action("AddOpinion", "Shop")">
                 @Html.AntiForgeryToken()
                 <div class="modal-header">
                     <h5 class="modal-title">افزودن نظر</h5>
@@ -169,35 +205,61 @@
                     <input type="hidden" name="ProductId" id="op-product-id" value="" />
                     <div class="mb-3">
                         <label class="form-label">امتیاز</label>
-                        <input type="number" name="Rating" class="form-control" min="1" max="5" required />
+                        <select name="Rating" class="form-select" required>
+                            <option value="">انتخاب امتیاز</option>
+                            <option value="5">عالی (5 ستاره)</option>
+                            <option value="4">خوب (4 ستاره)</option>
+                            <option value="3">متوسط (3 ستاره)</option>
+                            <option value="2">ضعیف (2 ستاره)</option>
+                            <option value="1">خیلی ضعیف (1 ستاره)</option>
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">نظر شما</label>
-                        <textarea name="Comment" class="form-control" required></textarea>
+                        <textarea name="Comment" class="form-control" rows="4" required placeholder="نظر خود را در مورد این محصول بنویسید..."></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">ثبت نظر </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">لغو</button>
+                    <button type="submit" class="btn btn-primary">ثبت نظر</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-
-
-
-
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Fixed script tag -->
+    <script src="~/js/search.js"></script>
 
     <script>
+        // Ensure jQuery is loaded before this
+        $(document).ready(function() {
+            
+            // Make category filter buttons work
+            $('.category-filters .category-btn').on('click', function() {
+                const category = $(this).data('category');
+                $('#searchForm').append('<input type="hidden" name="category" value="' + category + '">');
+                $('#searchForm').submit();
+            });
 
-          // Ensure jQuery is loaded before this
+            // Auto-search when typing (optional)
+            $('.search-input').on('input', debounce(function() {
+                const query = $(this).val();
+                if (query.length > 2 || query.length === 0) {
+                    // You can implement AJAX search here if needed
+                    console.log('Search query:', query);
+                }
+            }, 500));
 
-          // Global function used by your "مشاهده جزئیات" buttons:
-          // <button onclick="openDetailProductModal( p.Id)">مشاهده جزئیات</button>
-          window.openDetailProductModal = function (id) {
+            // Initialize tooltips if any
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+
+        // Global function used by your "مشاهده جزئیات" buttons
+        window.openDetailProductModal = function (id) {
             if (!id) return alert("Invalid id");
 
             $.getJSON("/Shop/GetProduct/" + id)
@@ -211,7 +273,7 @@
                 $("#pd-modal-brand").text(data.brand || "-");
                 $("#pd-modal-material").text(data.material || "-");
                 $("#pd-modal-stock").text(data.isActive ? "بله" : "خیر");
-                $("#pd-modal-description").html(data.description || "");
+                $("#pd-modal-description").html(data.description ? data.description.replace(/\n/g, '<br>') : "بدون توضیح");
 
                 // Set productId for add-opinion form
                 $("#op-product-id").val(data.id);
@@ -224,10 +286,13 @@
                     return;
                   }
                   list.forEach(function (op) {
+                    var stars = '★'.repeat(op.rating) + '☆'.repeat(5 - op.rating);
                     var tpl = `<div class="border p-2 mb-2 rounded">
-                                 <strong>${escapeHtml(op.userName || "کاربر")}</strong>
-                                 <span class="text-warning"> ${op.rating || ""} ★</span>
-                                 <div class="small text-muted">${op.createdAt ? new Date(op.createdAt).toLocaleString() : ""}</div>
+                                 <div class="d-flex justify-content-between">
+                                   <strong>${escapeHtml(op.userName || "کاربر")}</strong>
+                                   <span class="text-warning">${stars}</span>
+                                 </div>
+                                 <div class="small text-muted">${op.createdAt ? new Date(op.createdAt).toLocaleDateString('fa-IR') : ""}</div>
                                  <p class="mt-1 mb-0">${escapeHtml(op.comment || "")}</p>
                                </div>`;
                     $out.append(tpl);
@@ -246,10 +311,10 @@
                 if (xhr && xhr.status === 404) msg = "محصولی یافت نشد";
                 alert(msg);
               });
-          };
+        };
 
-          // helper to avoid XSS when injecting simple text
-          function escapeHtml(s) {
+        // Helper to avoid XSS when injecting simple text
+        function escapeHtml(s) {
             if (!s) return "";
             return String(s)
               .replace(/&/g, "&amp;")
@@ -257,84 +322,70 @@
               .replace(/>/g, "&gt;")
               .replace(/"/g, "&quot;")
               .replace(/'/g, "&#039;");
-          }
+        }
 
-          // Submit opinion via AJAX and refresh modal opinions on success
-          $(document).on("submit", "#addOpinionForm", function (e) {
+        // Debounce function for search
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Submit opinion via AJAX and refresh modal opinions on success
+        $(document).on("submit", "#addOpinionForm", function (e) {
             e.preventDefault();
             var $form = $(this);
             var formData = $form.serialize();
 
-            // get antiforgery token and include in header
+            // Get antiforgery token and include in header
             var token = $form.find("input[name='__RequestVerificationToken']").val();
 
             $.ajax({
               url: $form.attr("action"),
               method: "POST",
               data: formData,
-              headers: token ? { "RequestVerificationToken": token } : {},
+              headers: {
+                "RequestVerificationToken": token
+              }
             }).done(function (res) {
               if (res && res.success) {
-                // close addOpinionModal
+                // Close addOpinionModal
                 var addModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('addOpinionModal'));
                 addModal.hide();
 
-                // refresh product detail modal (reload data)
+                // Reset form
+                $form[0].reset();
+
+                // Refresh product detail modal (reload data)
                 var productId = $("#op-product-id").val();
-                if (productId) openDetailProductModal(productId);
+                if (productId) openDetailProductModal(parseInt(productId));
+                
+                alert("نظر شما با موفقیت ثبت شد");
               } else {
                 alert(res && res.message ? res.message : "خطا در ثبت نظر");
               }
-            }).fail(function () {
-              alert("خطای سرور هنگام ثبت نظر");
-            });
-          });
-
-
-
-        // 🔹 Live search trigger
-        $("#searchBox").on("input", function () {
-            let q = $(this).val();
-            if (q.length < 2) {
-                $("#searchResults").addClass("d-none");
-                return;
-            }
-
-            $.get("/Products/Search", { term: q }, function (data) {
-                let results = $("#searchResults").empty();
-                if (data && data.length > 0) {
-                    data.forEach(item => {
-                        results.append(
-                            `<a href="javascript:void(0)"
-                                        onclick="loadProductDetails(${item.id})"
-                                        class="list-group-item list-group-item-action">
-                                        ${item.title}
-                                     </a>`
-                        );
-                    });
-                    results.removeClass("d-none");
-                } else {
-                    results.append(`<div class="list-group-item text-muted">نتیجه‌ای یافت نشد</div>`);
-                    results.removeClass("d-none");
-                }
+            }).fail(function (xhr) {
+              alert("خطای سرور هنگام ثبت نظر: " + (xhr.responseJSON?.message || ""));
             });
         });
 
-        // 🔹 Submit opinion form via AJAX
-        $(document).on("submit", "#addOpinionForm", function (e) {
-            e.preventDefault();
-            var form = $(this);
-
-            $.post(form.attr("action"), form.serialize())
-                .done(function (res) {
-                    if (res.success) {
-                        // Reload only the opinions section instead of refreshing full page
-                        loadProductDetails(res.productId);
-                    } else {
-                        alert(res.message || "خطا در ثبت نظر");
-                    }
-                })
-                .fail(() => alert("خطای سرور"));
+        // Add to cart functionality
+        $("#pd-add-to-cart").on("click", function() {
+            const productId = $("#op-product-id").val();
+            if (!productId) {
+                alert("خطا در شناسایی محصول");
+                return;
+            }
+            
+            // Implement your add to cart logic here
+            console.log("Add to cart:", productId);
+            alert("محصول به سبد خرید اضافه شد");
         });
     </script>
 }

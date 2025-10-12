@@ -9,9 +9,9 @@ namespace avatCo.Models
         {
             var optionsBuilder = new DbContextOptionsBuilder<AvatDbContext>();
 
-            // Use your real connection string here (or read from config if you want)
-            var connectionString = "Server=localhost;Port=3306;Database=avatdb;User=avat;Password=1234;";
-            optionsBuilder.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 39)));
+            // Update to match your current database credentials
+            var connectionString = "Server=localhost;Port=3306;Database=avatco;User=appuser;Password=password123;";
+            optionsBuilder.UseMySql(connectionString, ServerVersion.Parse("8.0.39"));
 
             return new AvatDbContext(optionsBuilder.Options);
         }

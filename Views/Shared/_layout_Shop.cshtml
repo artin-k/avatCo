@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Avat Co</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/avatCo.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/shopHead.css" asp-append-version="true"/>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <!-- Left: Logo -->
+                <a class="navbar-brand fw-bold" href="~/">Avat Co</a>
+
+                <!-- Toggler -->
+                <button class="navbar-toggler" type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#mainNav"
+                        aria-controls="mainNav"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Collapsible Content -->
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <!-- Center: Navigation -->
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0 text-center">
+                        <li class="nav-item"><a class="nav-link" href="~/">خانه</a></li>
+                        <li class="nav-item"><a class="nav-link" href="~/Shop">فروشگاه</a></li>
+                        <li class="nav-item"><a class="nav-link" href="~/Profile/Login">ورود / ثبت نام</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">وبلاگ</a></li>
+                        <li class="nav-item"><a class="nav-link" href="~/Admin/Products">افزودن محصول</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">خدمات</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">پشتیبانی</a></li>
+                    </ul>
+
+                    <!-- Right: Icons -->
+                    <div class="d-flex justify-content-center mt-3 mt-lg-0">
+                        <a href="#" class="nav-icon me-3"><i class="bi bi-cart"></i></a>
+                        <a href="#" class="nav-icon"><i class="bi bi-person"></i></a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="container">
+            <div class="search-container text-center">
+                <h1 class="search-title">جستجوی محصولات آزمایشگاهی</h1>
+                <p class="search-subtitle">بزرگترین فروشگاه آنلاین محصولات آزمایشگاهی در غرب کشور</p>
+                
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="نام محصول، دسته بندی یا برند مورد نظر را جستجو کنید...">
+                    <button class="search-button">جستجو</button>
+                </div>
+                
+                <div class="category-filters">
+                    <button class="category-btn">شیشه آلات</button>
+                    <button class="category-btn">مواد شیمیایی</button>
+                    <button class="category-btn">تجهیزات پزشکی</button>
+                    <button class="category-btn">لوازم مصرفی</button>
+                    <button class="category-btn">دستگاه‌های آزمایشگاهی</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="content-wrapper">
+        <div class="container">
+            <!-- Content Highlights -->
+            <section class="content-highlights">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="highlight-card text-center">
+                            <div class="highlight-icon">
+                                <i class="bi bi-truck"></i>
+                            </div>
+                            <h4>تحویل سریع</h4>
+                            <p>ارسال سریع و به موقع محصولات به سراسر کشور با بسته بندی مناسب و ایمن</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="highlight-card text-center">
+                            <div class="highlight-icon">
+                                <i class="bi bi-shield-check"></i>
+                            </div>
+                            <h4>ضمانت اصالت</h4>
+                            <p>کلیه محصولات دارای ضمانت اصالت و گارانتی بازگشت وجه در صورت عدم رضایت</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="highlight-card text-center">
+                            <div class="highlight-icon">
+                                <i class="bi bi-headset"></i>
+                            </div>
+                            <h4>پشتیبانی 24/7</h4>
+                            <p>پشتیبانی تلفنی و آنلاین در تمام ساعات شبانه روز برای پاسخگویی به سوالات شما</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <footer class="site-footer text-white" dir="rtl">
+        <div class="container py-5">
+            <div class="row">
+                <!-- Column 1: About -->
+                <div class="col-12 col-md-3 mb-4">
+                    <h5 class="fw-bold">Avat Co</h5>
+                    <p class="small">بزرگ‌ترین فروشگاه آنلاین محصولات آزمایشگاهی غرب کشور</p>
+                    <div class="mt-3">
+                        <a href="#" class="text-white me-3"><i class="bi bi-instagram fs-5"></i></a>
+                        <a href="#" class="text-white me-3"><i class="bi bi-telegram fs-5"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-whatsapp fs-5"></i></a>
+                    </div>
+                </div>
+
+                <!-- Column 2: Quick Links -->
+                <div class="col-12 col-md-3 mb-4">
+                    <h6 class="fw-bold">لینک های سریع</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a href="#" class="footer-link">خانه</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link">فروشگاه</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link">وبلاگ</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link">تماس با ما</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3: Support -->
+                <div class="col-12 col-md-3 mb-4">
+                    <h6 class="fw-bold">پشتیبانی</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a href="#" class="footer-link">سوالات متداول</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link">پیگیری سفارش</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link">شرایط بازگشت</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link">حریم خصوصی</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 4: Contact -->
+                <div class="col-12 col-md-3 mb-4">
+                    <h6 class="fw-bold">ارتباط با ما</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><i class="bi bi-telephone me-2"></i> ۰۲۱-۱۲۳۴۵۶۷۸</li>
+                        <li class="mb-2"><i class="bi bi-envelope me-2"></i> info@avatco.com</li>
+                        <li class="mb-2"><i class="bi bi-geo-alt me-2"></i> تهران، خیابان ولیعصر</li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr class="border-light">
+
+            <div class="text-center small">© 2025 Avat Co - تمامی حقوق محفوظ است</div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
