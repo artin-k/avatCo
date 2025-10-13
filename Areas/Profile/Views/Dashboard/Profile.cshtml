@@ -30,34 +30,112 @@
     </ul>
 </div>
  
-<table class="table">
-    <thead>
-        <tr>
-            <th>Product</th>
-            <th>Qty</th>
-            <th>Price</th>
-            <th>Total</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.CartItems)
-        {
-            <tr>
-                <td>@item.Product.Title</td>
-                <td>@item.Quantity</td>
-                <td>@item.Product.Price.ToString("C")</td>
-                <td>@(item.Quantity * item.Product.Price).ToString("C")</td>
-                <td>
-                    <form method="post" action="/Cart/Remove">
-                        <input type="hidden" name="CartItemId" value="@item.Id" />
-                        <button class="btn btn-danger btn-sm">Remove</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+ <!-- Cart Content -->
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">🛒 سبد خرید شما</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.CartItems.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>محصول</th>
+                                        <th>قیمت</th>
+                                        <th>تعداد</th>
+                                        <th>جمع</th>
+                                        <th>عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.CartItems)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <img src="@item.Product.ImageUrl" 
+                                                         alt="@item.Product.Title" 
+                                                         class="cart-item-image">
+                                                    <div class="ms-3">
+                                                        <h6 class="mb-0">@item.Product.Title</h6>
+                                                        <small class="text-muted">@item.Product.Brand</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>@item.Product.Price.ToString("N0") تومان</td>
+                                            <td>
+                                                <div class="quantity-controls d-flex align-items-center">
+                                                    <button class="btn btn-sm btn-outline-secondary quantity-btn" 
+                                                            onclick="updateQuantity(@item.Id, @item.Quantity - 1)"
+                                                            @(item.Quantity <= 1 ? "disabled" : "")>
+                                                        -
+                                                    </button>
+                                                    <span class="mx-2 quantity-display">@item.Quantity</span>
+                                                    <button class="btn btn-sm btn-outline-secondary quantity-btn" 
+                                                            onclick="updateQuantity(@item.Id, @item.Quantity + 1)"
+                                                            @* @(item.Quantity >= item.Product ? "disabled" : "")> *@>
+                                                        
+                                                    </button>
+                                                </div>
+                                            </td>
+                                            <td class="fw-bold">@((item.Product.Price * item.Quantity).ToString("N0")) تومان</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-danger" 
+                                                        onclick="removeFromCart(@item.Id)">
+                                                    ❌ حذف
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h6>خلاصه سفارش</h6>
+                                        <div class="d-flex justify-content-between">
+                                            <span>تعداد اقلام:</span>
+                                            <span>@Model.CartItems عدد</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mt-2">
+                                            <strong>جمع کل:</strong>
+                                            @* <strong class="text-success">@Model.TotalPrice.ToString("N0") تومان</strong> *@
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-end">
+                                <div class="w-100">
+                                    <button class="btn btn-success w-100 btn-lg" onclick="proceedToCheckout()">
+                                        📦 ادامه فرآیند خرید
+                                    </button>
+                                    <button class="btn btn-outline-danger w-100 mt-2" onclick="clearCart()">
+                                        🗑️ خالی کردن سبد
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="bi bi-cart-x display-1 text-muted"></i>
+                            <h4 class="text-muted mt-3">سبد خرید شما خالی است</h4>
+                            <p class="text-muted">می‌توانید از فروشگاه ما محصولات مورد نظر خود را اضافه کنید</p>
+                            <a href="/Shop" class="btn btn-primary mt-3">🛍️ بازگشت به فروشگاه</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -100,6 +178,7 @@
         </div>
     </div>
 </div>
+<script src="~/js/cart.js"></script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>

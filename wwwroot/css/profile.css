@@ -1,0 +1,81 @@
+/* Add to Cart Styles */
+.add-to-cart-btn {
+    background: #28a745;
+    border: none;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.add-to-cart-btn:hover {
+    background: #218838;
+    transform: translateY(-2px);
+}
+
+.add-to-cart-btn.loading {
+    position: relative;
+    color: transparent;
+}
+
+.add-to-cart-btn.loading::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin: -8px 0 0 -8px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    border-right-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Cart badge */
+.cart-count-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #dc3545;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+/* Toast notifications */
+.cart-toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 9999;
+    transition: transform 0.3s ease;
+    font-weight: 500;
+}
+
+.cart-toast.show {
+    transform: translateX(-50%) translateY(0);
+}
+
+.cart-toast-success {
+    border-right: 4px solid #28a745;
+    background: #f8fff9;
+}
+
+.cart-toast-error {
+    border-right: 4px solid #dc3545;
+    background: #fff8f8;
+}

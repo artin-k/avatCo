@@ -51,17 +51,16 @@
 </section>
 
 <!-- Special Offers -->
-<section class="special-offers container my-5">
+@* <section class="special-offers container my-5">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h4>پیشنهادات ویژه</h4>
     </div>
-    <div class="offers-grid">
+      <div class="offers-grid">
         <button class="scroll-btn prev-btn">&lt;</button>
           <div class="row g-4 justify-content-center">
               @foreach (var so in Model.Products.Where(p => p.IsSpecialOffer))
               {
                 <div class="offer-card">
-                  <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                       <div class="card text-center h-100 offer-card">
                           <img src="@so.ImageUrl" class="offer-img" alt="@so.Title" />
                           <div class="card-body">
@@ -70,9 +69,29 @@
                           </div>
                       </div>
                   </div>
-                </div>
               }
           </div>
+        <button class="scroll-btn next-btn">&gt;</button>
+    </div>
+</section> *@
+
+<!-- ALTERNATIVE VERSION - GUARANTEED TO WORK -->
+<section class="special-offers alternative">
+    <div class="scroll-container">
+        <button class="scroll-btn prev-btn">&lt;</button>
+        
+        <div class="offers-grid">
+            @foreach (var so in Model.Products.Where(p => p.IsSpecialOffer))
+            {
+                <div class="offer-card">
+                    <img src="@so.ImageUrl" class="offer-img" alt="@so.Title" />
+                    <div class="card-body">
+                        <h6>@so.Title</h6>
+                    </div>
+                </div>
+            }
+        </div>
+        
         <button class="scroll-btn next-btn">&gt;</button>
     </div>
 </section>
@@ -128,7 +147,7 @@
       </div>
     </div>
   </section>
-  
+
 
     <!-- Services Row -->
   <section>

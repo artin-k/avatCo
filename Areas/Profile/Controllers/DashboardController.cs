@@ -1,6 +1,5 @@
 ﻿using avatCo.Models;
 using avatCo.Models.ViewModel;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.EntityFrameworkCore;
@@ -48,6 +47,32 @@ namespace avatCo.Areas.Profile.Controllers
             }
 
             return View(user);
+        }
+
+        [HttpGet("Cart")]
+        public async Task<IActionResult> Cart()
+        {
+            // Get user ID (you'll need to implement your user management)
+            var userId = User.Identity.IsAuthenticated ? 
+                User.FindFirst(ClaimTypes.NameIdentifier)?.Value : 
+                HttpContext.Session.GetString("CartSessionId");
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return View(new CartViewModel());
+            }
+
+            var cartItems = await _context.CartItems
+                .Include(ci => ci.Product)
+                .Where(ci => ci.UserId.ToString() == userId)
+                .ToListAsync();
+
+            var viewModel = new CartViewModel
+            {
+                CartItems = cartItems
+            };
+
+            return View(viewModel);
         }
 
         [HttpGet("GetProfileData")]
@@ -193,13 +218,13 @@ namespace avatCo.Areas.Profile.Controllers
         }
 
 
-        [HttpPost("Logout")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Logout()
-        {
- //           await _signInManager.SignOutAsync();
-            return RedirectToAction("Login", "Profile", new { area = "UserProfile" });
-        }
+        // [HttpPost("Logout")]
+        // [ValidateAntiForgeryToken]
+        // public async Task<IActionResult> Logout()
+        // {
+        //     await _signInManager.SignOutAsync();
+        //     return RedirectToAction("Login", "Profile", new { area = "UserProfile" });
+        // }
 
 
     }
